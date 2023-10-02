@@ -11,12 +11,11 @@ PostMan::PostMan(QObject *parent)
 
 void PostMan::networkManagerGotResponse(QNetworkReply *reply)
 {
-  qDebug() << "HERE";
+  qDebug() << "Network response";
   if (reply->error() == QNetworkReply::NoError)
   {
     QString response = reply->readAll();
-    qDebug() << response;
-    emit newResponseFromServer(response);
+    emit    newResponseFromServer(response);
   }
   else
   {

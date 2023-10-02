@@ -11,6 +11,7 @@ SOURCES += \
         src/Cartographer/cartographer.cpp \
         src/GameManager/gamemanager.cpp \
         src/Network/postman.cpp \
+        src/RosettaStone/jsonparser.cpp \
         src/main.cpp
 
 # Default rules for deployment.
@@ -21,4 +22,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
   src/Cartographer/cartographer.h \
   src/GameManager/gamemanager.h \
-  src/Network/postman.h
+  src/Network/postman.h \
+  src/RosettaStone/jsonparser.h
