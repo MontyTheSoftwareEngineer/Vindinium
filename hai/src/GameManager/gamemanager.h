@@ -13,6 +13,7 @@ public:
     TRAINING = 0,
     ARENA
   };
+
   Q_ENUM(GAME_MODE)
 
   explicit GameManager(QObject *parent, const QString&keyFilePath, const QString& serverURL);

@@ -26,7 +26,7 @@ public:
   Q_ENUM(TILE_TYPE)
   explicit Cartographer(QObject *parent = nullptr);
 
-  void parseMap(const int& size, const QString& map);
+  void parseMap(const int& size, const QString& map, QList <TILE_TYPE>& outputMap);
 
   void printOneDMap(const int& size, const QList <TILE_TYPE> oneDMap);
 

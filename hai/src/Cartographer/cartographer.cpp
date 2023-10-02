@@ -18,17 +18,17 @@ Cartographer::Cartographer(QObject *parent)
   m_tileLegend["  "] = FREE_SPACE;
 }
 
-void Cartographer::parseMap(const int&size, const QString&inputMap)
+void Cartographer::parseMap(const int&size, const QString&inputMap, QList <TILE_TYPE>&outputMap)
 {
-  QList <TILE_TYPE> oneDMap;
+  outputMap.clear();
 
   for (int index = 0; index < inputMap.size(); index += 2)
   {
     QString stringTile = inputMap.mid(index, 2);
-    oneDMap.append(stringToTileType(stringTile));
+    outputMap.append(stringToTileType(stringTile));
   }
 
-  printOneDMap(size, oneDMap);
+  printOneDMap(size, outputMap);
 }
 
 void Cartographer::printOneDMap(const int&size, const QList <TILE_TYPE> oneDMap)
