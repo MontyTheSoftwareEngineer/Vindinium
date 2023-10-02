@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
   }
 
   GameManager gameMan(nullptr, keyFilePath, "http://10.23.78.17:9000");
+  gameMan.startNewGame(GameManager::TRAINING);
 
   return(a.exec());
 }

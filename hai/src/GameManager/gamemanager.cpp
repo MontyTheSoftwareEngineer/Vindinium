@@ -23,7 +23,13 @@ void GameManager::startNewGame(GAME_MODE mode)
   m_currentGameID.clear();
   QString serverUrl = m_serverURL + (mode == TRAINING ? TRAINING_API : ARENA_API);
 
+  if (m_apiKey.isEmpty())
+  {
+    qErrnoWarning(2, "Could not read API Key!");
+  }
+
   QUrlQuery postData;
+  postData.addQueryItem("key", m_apiKey);
 
   m_postMan->makeNetworkRequest(serverUrl, postData);
 }
