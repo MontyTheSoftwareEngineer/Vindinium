@@ -31,6 +31,7 @@ private:
   QString m_apiKey;
   QString m_serverURL;
   QString m_currentGameID;
+  QString m_currentPlayUrl;
 };
 
 #endif // GAMEMANAGER_H

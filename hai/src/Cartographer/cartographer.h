@@ -12,6 +12,8 @@ public:
   void parseMap(const int& size, const QString& map);
 
 signals:
+
+private:
 };
 
 #endif // CARTOGRAPHER_H

@@ -19,8 +19,13 @@ JSONParser::GameData JSONParser::parseJSONString(const QString&jsonString)
 
   parsedData.m_gameID  = jsonObj.value("game").toObject().value("id").toString();
   parsedData.m_playUrl = jsonObj.value("playUrl").toString();
+
+  parsedData.m_viewUrl = jsonObj.value("viewUrl").toString();
   parsedData.m_mapSize = jsonObj.value("game").toObject().value("board").toObject().value("size").toInt();
   parsedData.m_gameMap = jsonObj.value("game").toObject().value("board").toObject().value("tiles").toString();
+
+  qDebug() << "Game URL: " << parsedData.m_viewUrl;
+  qDebug() << "Map Size: " << parsedData.m_mapSize;
 
   return(parsedData);
 }

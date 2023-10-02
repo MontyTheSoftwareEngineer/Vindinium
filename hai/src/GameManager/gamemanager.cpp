@@ -13,6 +13,7 @@ GameManager::GameManager(QObject *parent, const QString& keyFilePath, const QStr
   : QObject{parent}
   , m_apiKey(QString())
   , m_currentGameID(QString())
+  , m_currentPlayUrl(QString())
 {
   readAPIKey(keyFilePath);
 
@@ -39,12 +40,12 @@ void GameManager::startNewGame(GAME_MODE mode)
 
 void GameManager::newPostManResponse(const QString&response)
 {
-//  /qDebug() << "Message: " << response;
   JSONParser           jParser;
   JSONParser::GameData parsedGameData = jParser.parseJSONString(response);
 
-  Cartographer cartMan;
+  m_currentPlayUrl = parsedGameData.m_playUrl;
 
+  Cartographer cartMan;
   cartMan.parseMap(parsedGameData.m_mapSize, parsedGameData.m_gameMap);
 }
 
