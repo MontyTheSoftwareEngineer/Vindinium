@@ -4,69 +4,99 @@
 Cartographer::Cartographer(QObject *parent)
   : QObject{parent}
 {
+  m_tileLegend["@1"] = PLAYER_ONE;
+  m_tileLegend["@2"] = PLAYER_TWO;
+  m_tileLegend["@3"] = PLAYER_THREE;
+  m_tileLegend["@4"] = PLAYER_FOUR;
+  m_tileLegend["$1"] = MINE_ONE;
+  m_tileLegend["$2"] = MINE_TWO;
+  m_tileLegend["$3"] = MINE_THREE;
+  m_tileLegend["$4"] = MINE_FOUR;
+  m_tileLegend["$-"] = MINE_FREE;
+  m_tileLegend["##"] = IMPASSABLE;
+  m_tileLegend["[]"] = TAVERN;
+  m_tileLegend["  "] = FREE_SPACE;
 }
 
 void Cartographer::parseMap(const int&size, const QString&inputMap)
 {
-  QString ezMapView;
+  QList <TILE_TYPE> oneDMap;
 
-  qDebug().noquote() << inputMap;
-
-  for (int row = 0; row < size; row++)
+  for (int index = 0; index < inputMap.size(); index += 2)
   {
-    for (int index = 0; index < size * 2; index += 2)
-    {
-      qDebug() << "Row: " << row;
-      int pointStart = (row * size) + index;
-      if (inputMap[pointStart] == "#")
-      {
-        ezMapView.append("#");
-      }
-      else if (inputMap[pointStart] == "@")
-      {
-        qDebug() << "Player: " << inputMap[pointStart] << inputMap[pointStart + 1];
-        ezMapView.append(inputMap[pointStart + 1]);
-      }
-      else if (inputMap[pointStart] == "[")
-      {
-        ezMapView.append("T");
-      }
-      else if (inputMap[pointStart] == "$")
-      {
-        if (inputMap[pointStart + 1] == "-")
-        {
-          ezMapView.append("M");
-        }
-        else
-        {
-          int playerMine = QString(inputMap[pointStart + 1]).toInt();
-          switch (playerMine)
-          {
-          case 1:
-            ezMapView.append("A");
-            break;
-
-          case 2:
-            ezMapView.append("B");
-            break;
-
-          case 3:
-            ezMapView.append("C");
-            break;
-
-          case 4:
-            ezMapView.append("D");
-            break;
-          }
-        }
-      }
-      else
-      {
-        ezMapView.append(" ");
-      }
-    }
-    ezMapView.append("\n");
+    QString stringTile = inputMap.mid(index, 2);
+    oneDMap.append(stringToTileType(stringTile));
   }
 
-  qDebug().noquote() << ezMapView;
+  printOneDMap(size, oneDMap);
+}
+
+void Cartographer::printOneDMap(const int&size, const QList <TILE_TYPE> oneDMap)
+{
+  qDebug() << "Map Size: " << size;
+  int     colCount = 0;
+  QString ezMap;
+  for (int index = 0; index < oneDMap.size(); index++)
+  {
+    if (colCount >= size)
+    {
+      colCount = 0;
+      ezMap.append("\n");
+    }
+    ezMap.append(tileTypeToString(oneDMap[index]));
+    colCount++;
+  }
+
+  qDebug().noquote() << ezMap;
+}
+
+QString Cartographer::tileTypeToString(TILE_TYPE tile)
+{
+  switch (tile)
+  {
+  case PLAYER_ONE:
+    return("1");
+
+  case PLAYER_TWO:
+    return("2");
+
+  case PLAYER_THREE:
+    return("3");
+
+  case PLAYER_FOUR:
+    return("4");
+
+  case MINE_ONE:
+    return("A");
+
+  case MINE_TWO:
+    return("B");
+
+  case MINE_THREE:
+    return("C");
+
+  case MINE_FOUR:
+    return("D");
+
+  case MINE_FREE:
+    return("O");
+
+  case FREE_SPACE:
+    return(" ");
+
+  case IMPASSABLE:
+    return("X");
+
+  case TAVERN:
+    return("T");
+  }
+}
+
+Cartographer::TILE_TYPE Cartographer::stringToTileType(const QString tileString)
+{
+  if (m_tileLegend.contains(tileString))
+  {
+    return(m_tileLegend[tileString]);
+  }
+  qErrnoWarning(QString("Tile type not found brother: " + tileString).toUtf8());
 }
