@@ -4,6 +4,7 @@
 #include <QFile>
 
 #include "src/RosettaStone/jsonparser.h"
+#include "src/Cartographer/cartographer.h"
 
 static const QString TRAINING_API = "/api/training";
 static const QString ARENA_API    = "/api/arena";
@@ -38,9 +39,13 @@ void GameManager::startNewGame(GAME_MODE mode)
 
 void GameManager::newPostManResponse(const QString&response)
 {
-  qDebug() << "Message: " << response;
-  JSONParser jParser;
-  jParser.parseJSONString(response);
+//  /qDebug() << "Message: " << response;
+  JSONParser           jParser;
+  JSONParser::GameData parsedGameData = jParser.parseJSONString(response);
+
+  Cartographer cartMan;
+
+  cartMan.parseMap(parsedGameData.m_mapSize, parsedGameData.m_gameMap);
 }
 
 void GameManager::readAPIKey(const QString&keyFilePath)
