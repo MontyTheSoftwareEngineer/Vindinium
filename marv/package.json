@@ -13,6 +13,9 @@
     "vindinium-client": "^2.0.1"
   },
   "devDependencies": {
-    "prettier": "^3.0.3"
+    "express": "^4.18.2",
+    "jsdom": "^22.1.0",
+    "prettier": "^3.0.3",
+    "socket.io": "^4.7.2"
   }
 }

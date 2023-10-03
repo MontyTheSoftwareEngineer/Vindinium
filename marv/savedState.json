@@ -1,0 +1,102 @@
+{
+  "game": {
+    "id": "85sdhi38",
+    "turn": 0,
+    "maxTurns": 40,
+    "heroes": [
+      {
+        "id": 1,
+        "name": "marv",
+        "userId": "qp91dyiq",
+        "elo": 1200,
+        "pos": {
+          "x": 1,
+          "y": 3
+        },
+        "life": 100,
+        "gold": 0,
+        "mineCount": 0,
+        "spawnPos": {
+          "x": 1,
+          "y": 3
+        },
+        "crashed": false
+      },
+      {
+        "id": 2,
+        "name": "random",
+        "pos": {
+          "x": 10,
+          "y": 3
+        },
+        "life": 100,
+        "gold": 0,
+        "mineCount": 0,
+        "spawnPos": {
+          "x": 10,
+          "y": 3
+        },
+        "crashed": false
+      },
+      {
+        "id": 3,
+        "name": "random",
+        "pos": {
+          "x": 10,
+          "y": 8
+        },
+        "life": 100,
+        "gold": 0,
+        "mineCount": 0,
+        "spawnPos": {
+          "x": 10,
+          "y": 8
+        },
+        "crashed": false
+      },
+      {
+        "id": 4,
+        "name": "random",
+        "pos": {
+          "x": 1,
+          "y": 8
+        },
+        "life": 100,
+        "gold": 0,
+        "mineCount": 0,
+        "spawnPos": {
+          "x": 1,
+          "y": 8
+        },
+        "crashed": false
+      }
+    ],
+    "board": {
+      "size": 12,
+      "tiles": "  $-##$-[]    []$-##$-    ##  @1        @4  ##        ##        ##      ##  ##            ##  ##$-##    ##    ##    ##$-                                                $-##    ##    ##    ##$-##  ##            ##  ##      ##        ##        ##  @2        @3  ##    $-##$-[]    []$-##$-  "
+    },
+    "finished": false
+  },
+  "hero": {
+    "id": 1,
+    "name": "marv",
+    "userId": "qp91dyiq",
+    "elo": 1200,
+    "pos": {
+      "x": 1,
+      "y": 3
+    },
+    "life": 100,
+    "gold": 0,
+    "mineCount": 0,
+    "spawnPos": {
+      "x": 1,
+      "y": 3
+    },
+    "crashed": false
+  },
+  "token": "dpxt",
+  "viewUrl": "http://10.23.78.17:9000/85sdhi38",
+  "playUrl": "http://10.23.78.17:9000/api/85sdhi38/dpxt/play",
+  "context": {}
+}

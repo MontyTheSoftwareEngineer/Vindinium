@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarvBot</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script>
+    const socket = io.connect();
+    const startGame = () => {
+      socket.emit('startGame');
+    };
+
+    const requestPath = () => {
+      const gameBoard = document.getElementById('gameBoard');
+      socket.emit('requestPath', gameBoard.innerHTML);
+    }
+    /**
+     * @param {number} size
+     */
+    socket.on('map', (mapHTML) => {
+      const gameBoard = document.getElementById('gameBoard');
+      gameBoard.innerHTML = mapHTML;
+      // add an on click event listener to each cell of the gameboard <table>
+      const cells = document.querySelectorAll('#gameBoard td');
+      cells.forEach((cell) => {
+        cell.addEventListener('click', () => {
+          const y = cell.cellIndex;
+          const x = cell.parentNode.rowIndex;
+          console.log(`clicked cell ${x}, ${y}`)
+          socket.emit('requestPath', ({x, y}));
+        });
+      });
+    });
+
+    socket.on('gameState', (state) => {
+      const turns = document.getElementById('turns');
+      turns.innerHTML = `Turns: ${state.turn} / ${state.maxTurns}`;
+    });
+
+    socket.on('viewUrl', (url) => {
+      const status = document.getElementById('viewUrl');
+      status.innerHTML = 'ViewUrl <a href=' + url + '>' + url + '</a>';
+    });
+
+    socket.on('connect', () => {
+      const status = document.getElementById('status');
+      status.innerHTML = 'Connected';
+    });
+    socket.on('disconnect', () => {
+      const status = document.getElementById('status');
+      status.innerHTML = 'Disconnected';
+    });
+  </script>
+</head>
+<body>
+<div id="status"></div> <div id="viewUrl"></div>
+<div id="turns"></div>
+<button onclick="startGame()">Start</button>
+<hr>
+<div id="gameBoard"></div>
+</body>
+</html>

@@ -1,3 +1,4 @@
+const jsdom = require('jsdom');
 /**
  * @enum {string}
  * @readonly
@@ -73,12 +74,77 @@ class Map {
       }
     }
   }
+
+  /**
+   *
+   * @param {Tile[]} path
+   */
+  toHTML = (path = []) => {
+    const jsdom = require('jsdom');
+    const { JSDOM } = jsdom;
+    const dom = new JSDOM();
+    const document = dom.window.document;
+    let element = document.createElement('table');
+    for (let i = 0; i < this.size; i++) {
+      const row = document.createElement('tr');
+      for (let j = 0; j < this.size; j++) {
+        const cell = document.createElement('td');
+        const tile = this.tiles[i][j];
+        if (path.length > 0) {
+          // Check if we passed a path and if so, check if the current tile is in the path
+          if (path.find((p) => p.x === tile.x && p.y === tile.y)) {
+            cell.classList.add('path');
+          }
+        }
+        switch (tile.type) {
+          case tileType.free:
+            // no additional styling needed
+            break;
+          case tileType.wall:
+            cell.classList.add('wall');
+            break;
+          case tileType.tavern:
+            cell.classList.add('tavern');
+            break;
+          case tileType.mineH1:
+          case tileType.mineH2:
+          case tileType.mineH3:
+          case tileType.mineH4:
+          case tileType.mineN:
+            cell.classList.add('mine');
+            cell.textContent = tile.owner;
+            break;
+          case tileType.hero1:
+          case tileType.hero2:
+          case tileType.hero3:
+          case tileType.hero4:
+            cell.classList.add('hero');
+            cell.textContent = tile.owner;
+            break;
+        }
+        row.appendChild(cell);
+      }
+      element.appendChild(row);
+    }
+    document.body.appendChild(element);
+    return dom.serialize();
+  };
 }
 
 /**
  * @class Tile
  * @property {tileType} type
  * @property {number} owner
+ * @property {number} x
+ * @property {number} y
+ * @property {string} title
+ * @property {Position} pos
+ * @property {number} f
+ * @property {number} g
+ * @property {number} h
+ * @property {boolean} visited
+ * @property {boolean} closed
+ * @property {?Tile} parent
  */
 class Tile {
   get title() {
@@ -133,4 +199,5 @@ class Tile {
   }
 }
 
-module.exports = Map;
+exports.Map = Map;
+exports.tileType = tileType;

@@ -1,0 +1,31 @@
+table {
+    border-collapse: collapse;
+}
+
+td {
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.hero {
+    background-color: blue;
+    color: white;
+}
+
+.mine {
+    background-color: gold;
+}
+
+.tavern {
+    background-color: green;
+}
+
+.wall {
+    background-color: rgb(128, 128, 128);
+}
+
+.path {
+    background-color: red;
+}
