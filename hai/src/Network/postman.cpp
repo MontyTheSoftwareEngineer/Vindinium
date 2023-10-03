@@ -1,3 +1,13 @@
+/******************************************************************************
+ *
+ * @file postman.cpp
+ *
+ * @brief PostMan - Main Handler for network/http related functions.
+ *
+ * @author              Hai Pham
+ *
+ */
+
 #include "postman.h"
 
 #include <QNetworkRequest>

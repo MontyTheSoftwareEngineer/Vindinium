@@ -1,3 +1,12 @@
+/******************************************************************************
+ *
+ * @file gamemanager.cpp
+ *
+ * @brief GameManager - Main entry point/manager for game.
+ *
+ * @author              Hai Pham
+ *
+ */
 #include "gamemanager.h"
 
 #include <QUrlQuery>

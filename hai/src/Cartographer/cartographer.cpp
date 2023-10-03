@@ -1,3 +1,12 @@
+/******************************************************************************
+ *
+ * @file cartographer.cpp
+ *
+ * @brief Cartographer - Class for handling map related functions.
+ *
+ * @author              Hai Pham
+ *
+ */
 #include "cartographer.h"
 #include <QDebug>
 
@@ -31,19 +40,19 @@ void Cartographer::parseMap(const int&size, const QString&inputMap, QList <TILE_
   //printOneDMap(size, outputMap);
 }
 
-void Cartographer::printOneDMap(const int&size, const QList <TILE_TYPE> oneDMap)
+void Cartographer::printMap(const int&size, const QList <TILE_TYPE> inputMap)
 {
   qDebug() << "Map Size: " << size;
   int     colCount = 0;
   QString ezMap;
-  for (int index = 0; index < oneDMap.size(); index++)
+  for (int index = 0; index < inputMap.size(); index++)
   {
     if (colCount >= size)
     {
       colCount = 0;
       ezMap.append("\n");
     }
-    ezMap.append(tileTypeToString(oneDMap[index]));
+    ezMap.append(tileTypeToString(inputMap[index]));
     colCount++;
   }
 
