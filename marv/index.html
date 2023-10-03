@@ -40,6 +40,11 @@
       turns.innerHTML = `Turns: ${state.turn} / ${state.maxTurns}`;
     });
 
+    socket.on('heroState', (state) => {
+      const health = document.getElementById('health');
+      health.innerHTML = `Health: ${state.life} / 100`;
+    });
+
     socket.on('viewUrl', (url) => {
       const status = document.getElementById('viewUrl');
       status.innerHTML = 'ViewUrl <a href=' + url + '>' + url + '</a>';
@@ -57,7 +62,7 @@
 </head>
 <body>
 <div id="status"></div> <div id="viewUrl"></div>
-<div id="turns"></div>
+<div id="turns"></div><div id="health"></div>
 <button onclick="startGame()">Start</button>
 <hr>
 <div id="gameBoard"></div>

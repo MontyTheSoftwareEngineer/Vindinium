@@ -77,9 +77,9 @@ class Map {
 
   /**
    *
-   * @param {Tile[]} path
+   * @param {Tile[]} tilesToMark
    */
-  toHTML = (path = []) => {
+  toHTML = (tilesToMark = []) => {
     const jsdom = require('jsdom');
     const { JSDOM } = jsdom;
     const dom = new JSDOM();
@@ -90,10 +90,10 @@ class Map {
       for (let j = 0; j < this.size; j++) {
         const cell = document.createElement('td');
         const tile = this.tiles[i][j];
-        if (path.length > 0) {
+        if (tilesToMark.length > 0) {
           // Check if we passed a path and if so, check if the current tile is in the path
-          if (path.find((p) => p.x === tile.x && p.y === tile.y)) {
-            cell.classList.add('path');
+          if (tilesToMark.find((p) => p.x === tile.x && p.y === tile.y)) {
+            cell.classList.add('marked');
           }
         }
         switch (tile.type) {

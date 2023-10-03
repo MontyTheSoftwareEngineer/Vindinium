@@ -43,9 +43,10 @@ class AStar {
       });
 
       // first of all we need to see if we reached the end
-      if (currentNode === end) {
+      // end meaning we have a neighbor that is the end
+      if (this.getNeighborList(currentNode).includes(end)) {
         // we reached the end so lets return the path
-        let path = [];
+        let path = [end];
         while (currentNode.parent) {
           path.push(currentNode);
           currentNode = currentNode.parent;
