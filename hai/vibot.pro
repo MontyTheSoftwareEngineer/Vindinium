@@ -9,6 +9,7 @@ CONFIG += c++17 cmdline
 
 SOURCES += \
         src/Cartographer/cartographer.cpp \
+        src/Cartographer/marsrover.cpp \
         src/GameManager/gamemanager.cpp \
         src/Network/postman.cpp \
         src/RosettaStone/jsonparser.cpp \
@@ -21,6 +22,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
   src/Cartographer/cartographer.h \
+  src/Cartographer/marsrover.h \
   src/GameManager/gamemanager.h \
   src/Network/postman.h \
   src/RosettaStone/jsonparser.h

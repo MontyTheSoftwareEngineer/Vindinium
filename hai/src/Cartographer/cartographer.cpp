@@ -10,6 +10,8 @@
 #include "cartographer.h"
 #include <QDebug>
 
+#include "marsrover.h"
+
 Cartographer::Cartographer(QObject *parent)
   : QObject{parent}
 {
@@ -60,7 +62,8 @@ void Cartographer::addMineOrPlayerToList(const int mapSize, const int index, TIL
     break;
 
   case PLAYER_ONE:
-    owner = 1;
+    m_myLocation = index;
+    owner        = 1;
     break;
 
   case PLAYER_TWO:
@@ -80,7 +83,7 @@ void Cartographer::addMineOrPlayerToList(const int mapSize, const int index, TIL
     break;
   }
 
-  Unit newUnit(index, indexToCartesian(mapSize, index), owner);
+  Unit newUnit(index, MarsRover::indexToCartesian(mapSize, index), owner);
   if (isMine)
   {
     m_mineList.append(newUnit);
@@ -97,6 +100,7 @@ void Cartographer::parseMap(const int&size, const QString&inputMap)
   m_mineList.clear();
   m_tavernList.clear();
   m_playerList.clear();
+  m_myLocation = 0;
 
   for (int index = 0; index < inputMap.size(); index += 2)
   {
@@ -111,7 +115,7 @@ void Cartographer::parseMap(const int&size, const QString&inputMap)
     }
     else if (tileType == TAVERN)
     {
-      Unit newTavern(index, indexToCartesian(size, index), 0);
+      Unit newTavern(index, MarsRover::indexToCartesian(size, index), 0);
       m_tavernList.append(newTavern);
     }
     else if (tileType == PLAYER_ONE || tileType == PLAYER_TWO ||
@@ -196,19 +200,4 @@ Cartographer::TILE_TYPE Cartographer::stringToTileType(const QString tileString)
     return(m_tileLegend[tileString]);
   }
   qErrnoWarning(QString("Tile type not found brother: " + tileString).toUtf8());
-}
-
-QPair <int, int> Cartographer::indexToCartesian(const int size, const int index)
-{
-  int xCoord = index % size;
-  int yCoord = (int)(index / size);
-
-  return(QPair <int, int>(xCoord, yCoord));
-}
-
-int Cartographer::cartesianToIndex(const int size, QPair <int, int> inputCoord)
-{
-  int index = (inputCoord.second * size) + inputCoord.first;
-
-  return(index);
 }
