@@ -75,6 +75,22 @@ public:
    */
   TILE_TYPE stringToTileType(const QString tileString);
 
+  /**
+   * @brief Convert a 1D index to (x,y) coordinate.
+   * @param size size of the game map.
+   * @param index 1D array int index.
+   * @return QPair containing x,y cartesian coordinate representation of the 1D array.
+   */
+  QPair <int, int> indexToCartesian(const int size, const int index);
+
+  /**
+   * @brief Convert a cartesian (x,y) coord to 1d index.
+   * @param size size of the game map.
+   * @param inputCoord QPair containing (x,y) coordinate.
+   * @return integer index.
+   */
+  int cartesianToIndex(const int size, QPair <int, int> inputCoord);
+
 signals:
 
 private:

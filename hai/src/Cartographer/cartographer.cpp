@@ -109,3 +109,18 @@ Cartographer::TILE_TYPE Cartographer::stringToTileType(const QString tileString)
   }
   qErrnoWarning(QString("Tile type not found brother: " + tileString).toUtf8());
 }
+
+QPair <int, int> Cartographer::indexToCartesian(const int size, const int index)
+{
+  int xCoord = index % size;
+  int yCoord = (int)(index / size);
+
+  return(QPair <int, int>(xCoord, yCoord));
+}
+
+int Cartographer::cartesianToIndex(const int size, QPair <int, int> inputCoord)
+{
+  int index = (inputCoord.second * size) + inputCoord.first;
+
+  return(index);
+}
