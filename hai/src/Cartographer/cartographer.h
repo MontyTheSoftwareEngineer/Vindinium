@@ -20,6 +20,23 @@ class Cartographer : public QObject
 public:
 
   /**
+   * @struct Unit
+   * @brief The Unit struct defines a tile Unit which contains location and owner.
+   */
+  struct Unit
+  {
+    Unit(int index, QPair <int, int> cartCoord, int owner)
+    {
+      m_indexLocation     = index;
+      m_cartesianLocation = cartCoord;
+      m_owner             = owner;
+    }
+    int              m_indexLocation;
+    QPair <int, int> m_cartesianLocation;
+    int              m_owner;
+  };
+
+  /**
    * @enum TILE_TYPE
    * @brief The TILE_TYPE enum defines the different types of tiles available in the game map.
    */
@@ -50,9 +67,8 @@ public:
    * @brief Used to parse the 1D 2Char map into a 1D 1Char/Enum Map.
    * @param size The size of the map.
    * @param map The map representation in QString format (2Char per tile).
-   * @param outputMap The output QList that will hold the TILE_TYPE representation.
    */
-  void parseMap(const int& size, const QString& map, QList <TILE_TYPE>& outputMap);
+  void parseMap(const int& size, const QString& map);
 
   /**
    * @brief Print map to console.
@@ -81,7 +97,7 @@ public:
    * @param index 1D array int index.
    * @return QPair containing x,y cartesian coordinate representation of the 1D array.
    */
-  QPair <int, int> indexToCartesian(const int size, const int index);
+  static QPair <int, int> indexToCartesian(const int size, const int index);
 
   /**
    * @brief Convert a cartesian (x,y) coord to 1d index.
@@ -89,12 +105,24 @@ public:
    * @param inputCoord QPair containing (x,y) coordinate.
    * @return integer index.
    */
-  int cartesianToIndex(const int size, QPair <int, int> inputCoord);
+  static int cartesianToIndex(const int size, QPair <int, int> inputCoord);
+
+  /**
+   * @brief Helper function to add mine or player to mine list.
+   * @param mapSize size of the game map.
+   * @param index 1d index of unit location.
+   * @param tileType TILE_TYPE of tile.
+   */
+  void addMineOrPlayerToList(const int mapSize, const int index, TILE_TYPE tileType);
 
 signals:
 
 private:
   QMap <QString, TILE_TYPE> m_tileLegend; //Map for easier conversion from string -> tile_type.
+  QList <TILE_TYPE> m_mapCache;
+  QList <Unit> m_mineList;
+  QList <Unit> m_tavernList;
+  QList <Unit> m_playerList;
 };
 
 #endif // CARTOGRAPHER_H

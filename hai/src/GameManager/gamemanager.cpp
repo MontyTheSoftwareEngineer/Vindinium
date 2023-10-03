@@ -52,12 +52,10 @@ void GameManager::newPostManResponse(const QString&response)
   JSONParser           jParser;
   JSONParser::GameData parsedGameData = jParser.parseJSONString(response);
 
-  QList <Cartographer::TILE_TYPE> ezTileMap;
-
   m_currentPlayUrl = parsedGameData.m_playUrl;
 
   Cartographer cartMan;
-  cartMan.parseMap(parsedGameData.m_mapSize, parsedGameData.m_gameMap, ezTileMap);
+  cartMan.parseMap(parsedGameData.m_mapSize, parsedGameData.m_gameMap);
 
   if (parsedGameData.m_currentTurnCount < parsedGameData.m_totalTurns)
   {

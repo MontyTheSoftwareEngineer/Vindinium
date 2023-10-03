@@ -27,22 +27,110 @@ Cartographer::Cartographer(QObject *parent)
   m_tileLegend["  "] = FREE_SPACE;
 }
 
-void Cartographer::parseMap(const int&size, const QString&inputMap, QList <TILE_TYPE>&outputMap)
+void Cartographer::addMineOrPlayerToList(const int mapSize, const int index, TILE_TYPE tileType)
 {
-  outputMap.clear();
+  int  owner  = 0;
+  bool isMine = false;
+
+  switch (tileType)
+  {
+  case MINE_ONE:
+    owner  = 1;
+    isMine = true;
+    break;
+
+  case MINE_TWO:
+    owner  = 2;
+    isMine = true;
+    break;
+
+  case MINE_THREE:
+    owner  = 3;
+    isMine = true;
+    break;
+
+  case MINE_FOUR:
+    owner  = 4;
+    isMine = true;
+    break;
+
+  case MINE_FREE:
+    owner  = 0;
+    isMine = true;
+    break;
+
+  case PLAYER_ONE:
+    owner = 1;
+    break;
+
+  case PLAYER_TWO:
+    owner = 3;
+    break;
+
+  case PLAYER_THREE:
+    owner = 3;
+    break;
+
+  case PLAYER_FOUR:
+    owner = 4;
+    break;
+
+  default:
+    qErrnoWarning(2, "Tried to input invalid unit.");
+    break;
+  }
+
+  Unit newUnit(index, indexToCartesian(mapSize, index), owner);
+  if (isMine)
+  {
+    m_mineList.append(newUnit);
+  }
+  else //player unit
+  {
+    m_playerList.append(newUnit);
+  }
+}
+
+void Cartographer::parseMap(const int&size, const QString&inputMap)
+{
+  m_mapCache.clear();
+  m_mineList.clear();
+  m_tavernList.clear();
+  m_playerList.clear();
 
   for (int index = 0; index < inputMap.size(); index += 2)
   {
     QString stringTile = inputMap.mid(index, 2);
-    outputMap.append(stringToTileType(stringTile));
+
+    TILE_TYPE tileType = stringToTileType(stringTile);
+    if (tileType == MINE_ONE || tileType == MINE_TWO ||
+        tileType == MINE_THREE || tileType == MINE_FOUR ||
+        tileType == MINE_FREE)
+    {
+      addMineOrPlayerToList(size, index, tileType);
+    }
+    else if (tileType == TAVERN)
+    {
+      Unit newTavern(index, indexToCartesian(size, index), 0);
+      m_tavernList.append(newTavern);
+    }
+    else if (tileType == PLAYER_ONE || tileType == PLAYER_TWO ||
+             tileType == PLAYER_THREE || tileType == PLAYER_FOUR)
+    {
+      addMineOrPlayerToList(size, index, tileType);
+    }
+
+    m_mapCache.append(tileType);
   }
 
-  //printOneDMap(size, outputMap);
+  //printMap(size, m_mapCache);
 }
 
 void Cartographer::printMap(const int&size, const QList <TILE_TYPE> inputMap)
 {
   qDebug() << "Map Size: " << size;
+  qDebug() << m_mineList.size() << m_tavernList.size() << m_playerList.size();
+
   int     colCount = 0;
   QString ezMap;
   for (int index = 0; index < inputMap.size(); index++)
