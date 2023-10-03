@@ -17,8 +17,10 @@ JSONParser::GameData JSONParser::parseJSONString(const QString&jsonString)
 
   QJsonObject jsonObj = jsonDoc.object();
 
-  parsedData.m_gameID  = jsonObj.value("game").toObject().value("id").toString();
-  parsedData.m_playUrl = jsonObj.value("playUrl").toString();
+  parsedData.m_gameID           = jsonObj.value("game").toObject().value("id").toString();
+  parsedData.m_playUrl          = jsonObj.value("playUrl").toString();
+  parsedData.m_currentTurnCount = jsonObj.value("game").toObject().value("turn").toInt();
+  parsedData.m_totalTurns       = jsonObj.value("game").toObject().value("maxTurns").toInt();
 
   parsedData.m_viewUrl = jsonObj.value("viewUrl").toString();
   parsedData.m_mapSize = jsonObj.value("game").toObject().value("board").toObject().value("size").toInt();

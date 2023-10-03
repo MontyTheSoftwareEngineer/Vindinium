@@ -49,6 +49,22 @@ void GameManager::newPostManResponse(const QString&response)
 
   Cartographer cartMan;
   cartMan.parseMap(parsedGameData.m_mapSize, parsedGameData.m_gameMap, ezTileMap);
+
+  if (parsedGameData.m_currentTurnCount < parsedGameData.m_totalTurns)
+  {
+    qDebug() << "Turn " << parsedGameData.m_currentTurnCount << " of " << parsedGameData.m_totalTurns;
+    QUrl      playURL = parsedGameData.m_playUrl;
+    QUrlQuery postData;
+    postData.addQueryItem("key", m_apiKey);
+    postData.addQueryItem("dir", "North");
+
+    m_postMan->makeNetworkRequest(playURL, postData);
+  }
+  else
+  {
+    qDebug() << "Game Over!";
+    qDebug() << parsedGameData.m_viewUrl;
+  }
 }
 
 void GameManager::readAPIKey(const QString&keyFilePath)

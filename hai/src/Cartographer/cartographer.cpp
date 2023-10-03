@@ -28,7 +28,7 @@ void Cartographer::parseMap(const int&size, const QString&inputMap, QList <TILE_
     outputMap.append(stringToTileType(stringTile));
   }
 
-  printOneDMap(size, outputMap);
+  //printOneDMap(size, outputMap);
 }
 
 void Cartographer::printOneDMap(const int&size, const QList <TILE_TYPE> oneDMap)

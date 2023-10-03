@@ -14,6 +14,8 @@ public:
     QString m_viewUrl;
     int     m_mapSize;
     QString m_gameMap;
+    int     m_currentTurnCount;
+    int     m_totalTurns;
   };
   explicit JSONParser(QObject *parent = nullptr);
 
