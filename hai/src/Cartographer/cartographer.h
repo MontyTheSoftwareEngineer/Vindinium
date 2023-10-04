@@ -53,7 +53,8 @@ public:
     MINE_FOUR,             // Represents a mine owned by the fourth player.
     TAVERN,                // Represents a tavern tile.
     FREE_SPACE,            // Represents a free space tile.
-    IMPASSABLE             // Represents an impassable tile.
+    IMPASSABLE,            // Represents an impassable tile.
+    PATH
   };
   Q_ENUM(TILE_TYPE)
 
@@ -62,6 +63,11 @@ public:
    * @param parent The parent QObject for the Cartographer.
    */
   explicit Cartographer(QObject *parent = nullptr);
+
+  int mapCacheSize()
+  {
+    return(m_mapSize);
+  }
 
   /**
    * @brief Used to parse the 1D 2Char map into a 1D 1Char/Enum Map.
@@ -82,7 +88,7 @@ public:
    * @param tile The TILE_TYPE to be converted.
    * @return The string representation of the provided TILE_TYPE.
    */
-  QString tileTypeToString(TILE_TYPE tile);
+  static QString tileTypeToString(TILE_TYPE tile);
 
   /**
    * @brief Convert a string representation to its corresponding TILE_TYPE.
@@ -99,16 +105,28 @@ public:
    */
   void addMineOrPlayerToList(const int mapSize, const int index, TILE_TYPE tileType);
 
+  QList <TILE_TYPE> getCurrentMap()
+  {
+    return(m_mapCache);
+  }
+
+  void setNewDestination(const int index);
+
 signals:
+
+  void mapUpdated();
 
 private:
   QMap <QString, TILE_TYPE> m_tileLegend; //Map for easier conversion from string -> tile_type.
+  QList <TILE_TYPE> m_origMap;;
   QList <TILE_TYPE> m_mapCache;
   QList <Unit> m_mineList;
   QList <Unit> m_tavernList;
   QList <Unit> m_playerList;
 
+  int m_mapSize;
   int m_myLocation;
+  int m_targetLocation;
 };
 
 #endif // CARTOGRAPHER_H

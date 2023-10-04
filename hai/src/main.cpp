@@ -1,19 +1,25 @@
-#include <QCoreApplication>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QUrl>
-#include <QUrlQuery>
+#include <QGuiApplication>
+#include <QApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include <QDebug>
 #include <iostream>
 
+#include <QCoreApplication>
+
 #include "src/GameManager/gamemanager.h"
+#include "src/UIHelper/uihelper.h"
 
 int main(int argc, char *argv[])
 {
-  QCoreApplication a(argc, argv);
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-  QStringList args = a.arguments();
+  QApplication app(argc, argv);
+  app.setOrganizationName("Hai");
+  app.setOrganizationDomain("Pham");
+  app.setApplicationName("vindiniumclient");
+
+  QStringList args = app.arguments();
 
   /**
    * Set keyFilePath and serverUrl runtime arguments before running.
@@ -46,9 +52,34 @@ int main(int argc, char *argv[])
   {
     qErrnoWarning(-1, "Missing serverUrl argument. (--serverUrl \"http://127.0.0.1:9000\")");
   }
+  bool isQmlLoaded = false;
+
+  //qmlRegisterUncreatableType <GameManager>("Vindinium", 1, 0, "GameManager", "Uncreatable");
+
+  qmlRegisterType <UIHelper>("Vindinium", 1, 0, "UIHelper");
+  QQmlApplicationEngine engine;
 
   GameManager gameMan(nullptr, keyFilePath, serverUrl);
+  UIHelper    uiHelper;
+
+  QObject::connect(&gameMan, &GameManager::gameMapUpdated, &uiHelper, &UIHelper::newMapAvailable);
+  QObject::connect(&uiHelper, &UIHelper::newWayPoint, &gameMan, &GameManager::setNewDestination);
+
+  //gameMan.testMap("####################$-    ####    $-########################################    $-####$-    ##########################################            ####################################$-####    ########    ####$-############################  ##  ##  ########  ##  ##  ########################$-##          ########          ##$-####################    ##    ####  ####  ####    ##    ##################          ##  @1  $-$-  @4  ##          ####################  []  $-##  ########  ##$-  []  ########################    ##      ########      ##    ########################  ##      ############      ##  ######################              ########              ####################  ######  ##$-########$-##  ######  ####################  ##        ############        ##  ####################  ##        ############        ##  ####################  ######  ##$-########$-##  ######  ####################              ########              ######################  ##      ############      ##  ########################    ##      ########      ##    ########################  []  $-##  ########  ##$-  []  ####################          ##  @2  $-$-  @3  ##          ##################    ##    ####  ####  ####    ##    ####################$-##          ########          ##$-########################  ##  ##  ########  ##  ##  ############################$-####    ########    ####$-####################################            ##########################################    $-####$-    ########################################$-    ####    $-####################");
   gameMan.startNewGame(GameManager::TRAINING);
 
-  return(a.exec());
+  QObject::connect(&uiHelper, &UIHelper::mapUpdate, [&]() {
+    if (!isQmlLoaded)
+    {
+      qDebug() << "Loading QML for the first time";
+      engine.rootContext()->setContextProperty("uiHelper", &uiHelper);
+      engine.load(QUrl(QStringLiteral("qrc:/ui/ui/main.qml")));
+      isQmlLoaded = true;     // Set the flag
+    }
+  });
+
+  //engine.rootContext()->setContextProperty("uiHelper", &uiHelper);
+
+//  /..engine.load(QUrl(QStringLiteral("qrc:/ui/ui/main.qml")));
+  return(app.exec());
 }

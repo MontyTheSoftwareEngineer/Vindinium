@@ -1,7 +1,8 @@
-QT = core
-QT += network
+QT += quick quickcontrols2 qml network core gui \
+    widgets
 
-CONFIG += c++17 cmdline
+CONFIG += c++17 qtquickcompiler
+QTQUICK_COMPILER_SKIPPED_RESOURCES += qml.qrc
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -13,6 +14,7 @@ SOURCES += \
         src/GameManager/gamemanager.cpp \
         src/Network/postman.cpp \
         src/RosettaStone/jsonparser.cpp \
+        src/UIHelper/uihelper.cpp \
         src/main.cpp
 
 # Default rules for deployment.
@@ -25,4 +27,11 @@ HEADERS += \
   src/Cartographer/marsrover.h \
   src/GameManager/gamemanager.h \
   src/Network/postman.h \
-  src/RosettaStone/jsonparser.h
+  src/RosettaStone/jsonparser.h \
+  src/UIHelper/uihelper.h
+
+DISTFILES += \
+  ui/main.qml
+
+RESOURCES += \
+  qml.qrc

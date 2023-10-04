@@ -44,9 +44,11 @@ public:
    */
   struct PathFindNode
   {
-    int index;
-    int cameFrom;
-    int fVal;
+    int  index;
+    int  cameFrom;
+    int  fVal;
+    int  gVal;
+    bool visited;
   };
 
   /**
@@ -88,7 +90,7 @@ public:
    * @param gameMap 1d representation of game map.
    * @return TBD
    */
-  void pathFind(const int mapSize, const int startIndex, const int targetIndex, const QList <Cartographer::TILE_TYPE>& gameMap);
+  QList <Cartographer::TILE_TYPE> pathFind(const int mapSize, const int startIndex, const int targetIndex, const QList <Cartographer::TILE_TYPE>& gameMap);
 
 signals:
 

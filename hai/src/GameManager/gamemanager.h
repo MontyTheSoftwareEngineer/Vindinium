@@ -13,6 +13,7 @@
 
 #include <QObject>
 #include "src/Network/postman.h"
+#include "src/Cartographer/cartographer.h"
 
 class GameManager : public QObject
 {
@@ -55,7 +56,23 @@ public slots:
    */
   void newPostManResponse(const QString& response);
 
+  void setNewDestination(const int index);
+
+  /**
+   * @brief Method to test map string in offline mode.
+   * @param inputMap canned map data.
+   */
+  void testMap(const QString& inputMap);
+
+  void newMapFromCartographer();
+
 signals:
+
+  /**
+   * @brief Signal indicating map size changed.
+   * @param mapSize int of new map size.
+   */
+  void gameMapUpdated(const int mapSize, const QList <Cartographer::TILE_TYPE>& newMap);
 
 private:
 
@@ -66,6 +83,7 @@ private:
   void readAPIKey(const QString& keyFilePath);
 
   PostMan *m_postMan;
+  Cartographer *m_cartMan;
 
   QString m_apiKey;
   QString m_serverURL;

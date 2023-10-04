@@ -94,6 +94,17 @@ void Cartographer::addMineOrPlayerToList(const int mapSize, const int index, TIL
   }
 }
 
+void Cartographer::setNewDestination(const int index)
+{
+  m_mapCache       = m_origMap;
+  m_targetLocation = index;
+  MarsRover         pathFinder;
+  QList <TILE_TYPE> newMap = pathFinder.pathFind(m_mapSize, m_myLocation, m_targetLocation, m_mapCache);
+  m_mapCache = newMap;
+
+  emit mapUpdated();
+}
+
 void Cartographer::parseMap(const int&size, const QString&inputMap)
 {
   m_mapCache.clear();
@@ -101,31 +112,37 @@ void Cartographer::parseMap(const int&size, const QString&inputMap)
   m_tavernList.clear();
   m_playerList.clear();
   m_myLocation = 0;
+  m_mapSize    = size;
 
-  for (int index = 0; index < inputMap.size(); index += 2)
+  for (int countIndex = 0; countIndex < inputMap.size(); countIndex += 2)
   {
-    QString stringTile = inputMap.mid(index, 2);
+    QString stringTile = inputMap.mid(countIndex, 2);
 
     TILE_TYPE tileType = stringToTileType(stringTile);
     if (tileType == MINE_ONE || tileType == MINE_TWO ||
         tileType == MINE_THREE || tileType == MINE_FOUR ||
         tileType == MINE_FREE)
     {
-      addMineOrPlayerToList(size, index, tileType);
+      addMineOrPlayerToList(size, countIndex / 2, tileType);
     }
     else if (tileType == TAVERN)
     {
-      Unit newTavern(index, MarsRover::indexToCartesian(size, index), 0);
+      Unit newTavern(countIndex / 2, MarsRover::indexToCartesian(size, countIndex / 2), 0);
       m_tavernList.append(newTavern);
     }
     else if (tileType == PLAYER_ONE || tileType == PLAYER_TWO ||
              tileType == PLAYER_THREE || tileType == PLAYER_FOUR)
     {
-      addMineOrPlayerToList(size, index, tileType);
+      if (tileType == PLAYER_ONE)
+      {
+        m_myLocation = countIndex / 2;
+      }
+      addMineOrPlayerToList(size, countIndex / 2, tileType);
     }
 
     m_mapCache.append(tileType);
   }
+  m_origMap = m_mapCache;
 
   //printMap(size, m_mapCache);
 }
@@ -190,6 +207,9 @@ QString Cartographer::tileTypeToString(TILE_TYPE tile)
 
   case TAVERN:
     return("T");
+
+  case PATH:
+    return("-");
   }
 }
 
