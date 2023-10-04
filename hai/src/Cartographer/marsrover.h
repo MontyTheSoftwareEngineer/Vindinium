@@ -44,11 +44,12 @@ public:
    */
   struct PathFindNode
   {
-    int  index;
-    int  cameFrom;
-    int  fVal;
-    int  gVal;
-    bool visited;
+    int     index;
+    int     cameFrom;
+    int     fVal;
+    int     gVal;
+    bool    visited;
+    QString moveToHere;
   };
 
   /**
@@ -92,9 +93,17 @@ public:
    */
   QList <Cartographer::TILE_TYPE> pathFind(const int mapSize, const int startIndex, const int targetIndex, const QList <Cartographer::TILE_TYPE>& gameMap);
 
+
+  QString getNextMove()
+  {
+    return(m_nextMove);
+  }
+
 signals:
 
 private:
+
+  QString m_nextMove;
 };
 
 #endif // MARSROVER_H

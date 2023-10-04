@@ -64,10 +64,11 @@ public:
    */
   explicit Cartographer(QObject *parent = nullptr);
 
-  int mapCacheSize()
-  {
-    return(m_mapSize);
-  }
+  /**
+   * @brief Return current map size from Cartographer.
+   * @return map size.
+   */
+  int mapCacheSize();
 
   /**
    * @brief Used to parse the 1D 2Char map into a 1D 1Char/Enum Map.
@@ -105,15 +106,26 @@ public:
    */
   void addMineOrPlayerToList(const int mapSize, const int index, TILE_TYPE tileType);
 
+  /**
+   * @brief Return current game map.
+   * @return QList of game map in 1D array.
+   */
   QList <TILE_TYPE> getCurrentMap()
   {
     return(m_mapCache);
   }
 
-  void setNewDestination(const int index);
+  /**
+   * @brief Sets a destination for pathfinder.
+   * @param index 1D location of target destination.
+   */
+  QString setDestinationAndGetMove(const int index);
 
 signals:
 
+  /**
+   * @brief signal indicating a new map update is available.
+   */
   void mapUpdated();
 
 private:

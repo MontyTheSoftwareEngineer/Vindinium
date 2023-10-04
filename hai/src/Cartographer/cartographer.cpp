@@ -29,6 +29,11 @@ Cartographer::Cartographer(QObject *parent)
   m_tileLegend["  "] = FREE_SPACE;
 }
 
+int Cartographer::mapCacheSize()
+{
+  return(m_mapSize);
+}
+
 void Cartographer::addMineOrPlayerToList(const int mapSize, const int index, TILE_TYPE tileType)
 {
   int  owner  = 0;
@@ -94,7 +99,7 @@ void Cartographer::addMineOrPlayerToList(const int mapSize, const int index, TIL
   }
 }
 
-void Cartographer::setNewDestination(const int index)
+QString Cartographer::setDestinationAndGetMove(const int index)
 {
   m_mapCache       = m_origMap;
   m_targetLocation = index;
@@ -103,11 +108,14 @@ void Cartographer::setNewDestination(const int index)
   m_mapCache = newMap;
 
   emit mapUpdated();
+
+  return(pathFinder.getNextMove());
 }
 
 void Cartographer::parseMap(const int&size, const QString&inputMap)
 {
   m_mapCache.clear();
+
   m_mineList.clear();
   m_tavernList.clear();
   m_playerList.clear();

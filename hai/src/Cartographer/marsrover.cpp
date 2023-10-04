@@ -36,15 +36,14 @@ int MarsRover::roughDistance(const int mapSize, const int pos1, const int pos2)
 
 QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int startIndex, const int targetIndex, const QList <Cartographer::TILE_TYPE>& gameMap)
 {
+  m_nextMove = "STAY";
   PathFindNode startNode;
 
   startNode.index    = startIndex;
   startNode.cameFrom = -1;
   startNode.fVal     = roughDistance(mapSize, targetIndex, startIndex);
   startNode.gVal     = 0;
-  startNode.visited  = false;           // Changed from true
-
-  //qDebug() << "Rough Distance " << roughDistance(mapSize, targetIndex, startIndex);;
+  startNode.visited  = false;
 
   QMap <int, PathFindNode> openQueue;   // index, node
   QMap <int, PathFindNode> closedQueue; // index, node
@@ -74,28 +73,33 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
     openQueue.remove(lowestFValIndex);
     closedQueue[lowestFValIndex] = currentNode;
     qDebug() << "Current node: " << currentNode.index << ", fVal: " << currentNode.fVal;
-    QList <QPair <int, int> > nodesToAdd;
+    QList <PathFindNode> nodesToAdd;
 
     for (int i = 0; i < 4; i++)
     {
-      int modifier = 0;
+      int     modifier = 0;
+      QString move;
       qDebug() << "Checking dir: " << i;
       switch (i)
       {
       case 0:      // up
         modifier = -mapSize;
+        move     = "NORTH";
         break;
 
       case 1:      // right
         modifier = 1;
+        move     = "EAST";
         break;
 
       case 2:      // down
         modifier = mapSize;
+        move     = "SOUTH";
         break;
 
       case 3:      // left
         modifier = -1;
+        move     = "WEST";
         break;
       }
 
@@ -109,17 +113,26 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
         PathFindNode finalNode;
         finalNode.index          = nextIndex;
         finalNode.cameFrom       = currentNode.index;
+        finalNode.moveToHere     = move;
         closedQueue[targetIndex] = finalNode;
       }
-      if ((nextIndex >= 0) && (nextIndex < maxMapSize) &&
-          (nextIndexCartesian.first >= 0 && nextIndexCartesian.first < mapSize) &&
-          (nextIndexCartesian.second >= 0 && nextIndexCartesian.second < mapSize) &&
-          gameMap.at(nextIndex) == Cartographer::FREE_SPACE &&
-          !closedQueue.contains(nextIndex))
+      else if ((nextIndex >= 0) && (nextIndex < maxMapSize) &&                            //within index range
+               (nextIndexCartesian.first >= 0 && nextIndexCartesian.first < mapSize) &&   //x valid
+               (nextIndexCartesian.second >= 0 && nextIndexCartesian.second < mapSize) && //y valid
+               gameMap.at(nextIndex) == Cartographer::FREE_SPACE &&                       //space is free space
+               !closedQueue.contains(nextIndex))                                          //not in closed queue
       {
         qDebug() << "Valid node!";
         int nextNodeFVal = currentNode.gVal + 1 + roughDistance(mapSize, nextIndex, targetIndex);
-        nodesToAdd.append(QPair <int, int>(nextIndex, nextNodeFVal));
+
+        PathFindNode newNode;
+        newNode.index      = nextIndex;
+        newNode.cameFrom   = currentNode.index;
+        newNode.fVal       = nextNodeFVal;
+        newNode.gVal       = currentNode.gVal + 1;
+        newNode.visited    = false;
+        newNode.moveToHere = move;
+        nodesToAdd.append(newNode);
       }
       else
       {
@@ -127,28 +140,22 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
       }
     }
 
-    qDebug() << "Adding nodes";
+    qDebug() << "**Adding nodes**";
     for (int i = 0; i < nodesToAdd.size(); i++)
     {
-      qDebug() << "New Node: " << nodesToAdd[i].first << " , FVal: " << nodesToAdd[i].second;
-      if (!openQueue.contains(nodesToAdd[i].first) || (openQueue[nodesToAdd[i].first].fVal > nodesToAdd[i].second))
+      qDebug() << "New Node: " << nodesToAdd[i].index << " , FVal: " << nodesToAdd[i].index;
+      if (!openQueue.contains(nodesToAdd[i].index) || (openQueue[nodesToAdd[i].index].fVal > nodesToAdd[i].index))
       {
-        PathFindNode newNode;
-        newNode.index    = nodesToAdd[i].first;
-        newNode.cameFrom = currentNode.index;
-        newNode.fVal     = nodesToAdd[i].second;
-        newNode.gVal     = currentNode.gVal + 1;
-        newNode.visited  = false;
-        openQueue[nodesToAdd[i].first] = newNode;
-        qDebug() << "Added: " << newNode.index;
+        openQueue[nodesToAdd[i].index] = nodesToAdd[i];
+        qDebug() << "Added: " << nodesToAdd[i].index;
       }
       else
       {
         qDebug() << "Decided not to add node!";
-        qDebug() << "open queue contains: " << openQueue.contains(nodesToAdd[i].first);
-        if (openQueue.contains(nodesToAdd[i].first))
+        qDebug() << "open queue contains: " << openQueue.contains(nodesToAdd[i].index);
+        if (openQueue.contains(nodesToAdd[i].index))
         {
-          qDebug() << "New FVal: " << nodesToAdd[i].second << " | Old FVal: " << openQueue[nodesToAdd[i].first].fVal;
+          qDebug() << "New FVal: " << nodesToAdd[i].fVal << " | Old FVal: " << openQueue[nodesToAdd[i].index].fVal;
         }
       }
     }
@@ -177,6 +184,12 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
     while (currentPathIndex != startIndex)
     {
       path.prepend(currentPathIndex);
+
+      if (closedQueue[currentPathIndex].cameFrom == startIndex)
+      {
+        m_nextMove = closedQueue[currentPathIndex].moveToHere;
+      }
+
       currentPathIndex = closedQueue[currentPathIndex].cameFrom;
     }
     foreach(int pathIndex, path)

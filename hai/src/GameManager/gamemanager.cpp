@@ -81,7 +81,7 @@ void GameManager::newPostManResponse(const QString&response)
 
 void GameManager::setNewDestination(const int index)
 {
-  m_cartMan->setNewDestination(index);
+  qDebug() << m_cartMan->setDestinationAndGetMove(index);
 }
 
 void GameManager::testMap(const QString&inputMap)

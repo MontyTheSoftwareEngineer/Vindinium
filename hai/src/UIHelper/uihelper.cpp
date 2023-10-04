@@ -1,3 +1,12 @@
+/******************************************************************************
+ *
+ * @file uihelper.cpp
+ *
+ * @brief UIHelper - Class for helping to draw to qml.
+ *
+ * @author              Hai Pham
+ *
+ */
 #include "uihelper.h"
 #include <QDebug>
 

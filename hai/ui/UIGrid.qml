@@ -2,13 +2,6 @@ import QtQuick 2.9
 
 Column {
     id: colLayout
-
-    Component.onDestruction: {
-        gridComponent = null
-        console.log("BYEE")
-        createGridComponent()
-    }
-
     anchors.fill: parent
     Repeater {
         id: colRepeater
@@ -28,15 +21,23 @@ Column {
                     color: uiHelper.getCellColor(cellIndex)
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: window.refresh(
-                                       ) //uiHelper.setDest(cellIndex)
+                        onClicked: uiHelper.setDest(cellIndex)
                     }
                     Text {
                         id: cellText
-                        visible: false
+                        visible: true
+                        clip: true
                         anchors.centerIn: parent
                         color: "black"
                         text: uiHelper.getCellText(cellIndex)
+                    }
+
+                    Connections {
+                        target: uiHelper
+                        function onMapUpdate() {
+                            cellText.text = uiHelper.getCellText(cellIndex)
+                            cell.color = uiHelper.getCellColor(cellIndex)
+                        }
                     }
                 }
             }
