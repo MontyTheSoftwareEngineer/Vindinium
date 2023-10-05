@@ -12,26 +12,16 @@
 #define GAMEMANAGER_H
 
 #include <QObject>
+#include "src/MegaBlocks/megablocks.h"
+
 #include "src/Network/postman.h"
 #include "src/Cartographer/cartographer.h"
+
 
 class GameManager : public QObject
 {
   Q_OBJECT
 public:
-
-
-  /**
-   * @enum GAME_MODE
-   * @brief The GAME_MODE enum defines the different game types available.
-   */
-  enum GAME_MODE
-  {
-    TRAINING = 0,
-    ARENA
-  };
-
-  Q_ENUM(GAME_MODE)
 
   /**
    * @brief Default constructor.
@@ -48,7 +38,7 @@ public slots:
    * @brief Starts a new game.
    * @param mode GAME_MODE for type of game (training or arena).
    */
-  void startNewGame(GAME_MODE mode);
+  void startNewGame(MegaBlocks::GAME_MODE mode);
 
   /**
    * @brief Slot to handle new network data from PostMan.
@@ -72,7 +62,7 @@ signals:
    * @brief Signal indicating map size changed.
    * @param mapSize int of new map size.
    */
-  void gameMapUpdated(const int mapSize, const QList <Cartographer::TILE_TYPE>& newMap);
+  void gameMapUpdated(const int mapSize, const QList <MegaBlocks::TILE_TYPE>& newMap);
 
 private:
 

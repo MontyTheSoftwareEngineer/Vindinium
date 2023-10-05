@@ -34,10 +34,10 @@ int MarsRover::roughDistance(const int mapSize, const int pos1, const int pos2)
   return(xDelta + yDelta);
 }
 
-QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int startIndex, const int targetIndex, const QList <Cartographer::TILE_TYPE>& gameMap)
+QList <MegaBlocks::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int startIndex, const int targetIndex, const QList <MegaBlocks::TILE_TYPE>& gameMap)
 {
   m_nextMove = "STAY";
-  PathFindNode startNode;
+  MegaBlocks::PathFindNode startNode;
 
   startNode.index    = startIndex;
   startNode.cameFrom = -1;
@@ -45,9 +45,9 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
   startNode.gVal     = 0;
   startNode.visited  = false;
 
-  QMap <int, PathFindNode> openQueue;   // index, node
-  QMap <int, PathFindNode> closedQueue; // index, node
-  PathFindNode             currentNode = startNode;
+  QMap <int, MegaBlocks::PathFindNode> openQueue;   // index, node
+  QMap <int, MegaBlocks::PathFindNode> closedQueue; // index, node
+  MegaBlocks::PathFindNode             currentNode = startNode;
 
   int  maxMapSize  = mapSize * mapSize;
   bool foundTarget = false;
@@ -73,7 +73,7 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
     openQueue.remove(lowestFValIndex);
     closedQueue[lowestFValIndex] = currentNode;
     qDebug() << "Current node: " << currentNode.index << ", fVal: " << currentNode.fVal;
-    QList <PathFindNode> nodesToAdd;
+    QList <MegaBlocks::PathFindNode> nodesToAdd;
 
     for (int i = 0; i < 4; i++)
     {
@@ -110,7 +110,7 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
       {
         qDebug() << "Found Target!";
         foundTarget = true;
-        PathFindNode finalNode;
+        MegaBlocks::PathFindNode finalNode;
         finalNode.index          = nextIndex;
         finalNode.cameFrom       = currentNode.index;
         finalNode.moveToHere     = move;
@@ -119,13 +119,13 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
       else if ((nextIndex >= 0) && (nextIndex < maxMapSize) &&                            //within index range
                (nextIndexCartesian.first >= 0 && nextIndexCartesian.first < mapSize) &&   //x valid
                (nextIndexCartesian.second >= 0 && nextIndexCartesian.second < mapSize) && //y valid
-               gameMap.at(nextIndex) == Cartographer::FREE_SPACE &&                       //space is free space
+               gameMap.at(nextIndex) == MegaBlocks::FREE_SPACE &&                         //space is free space
                !closedQueue.contains(nextIndex))                                          //not in closed queue
       {
         qDebug() << "Valid node!";
         int nextNodeFVal = currentNode.gVal + 1 + roughDistance(mapSize, nextIndex, targetIndex);
 
-        PathFindNode newNode;
+        MegaBlocks::PathFindNode newNode;
         newNode.index      = nextIndex;
         newNode.cameFrom   = currentNode.index;
         newNode.fVal       = nextNodeFVal;
@@ -174,7 +174,7 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
     }
   }
 
-  QList <Cartographer::TILE_TYPE> newMap = gameMap;
+  QList <MegaBlocks::TILE_TYPE> newMap = gameMap;
 
   if (foundTarget)
   {
@@ -194,7 +194,7 @@ QList <Cartographer::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int
     }
     foreach(int pathIndex, path)
     {
-      newMap[pathIndex] = Cartographer::PATH;
+      newMap[pathIndex] = MegaBlocks::PATH;
     }
   }
   else

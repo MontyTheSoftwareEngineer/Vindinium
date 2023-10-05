@@ -13,44 +13,13 @@
 
 #include <QObject>
 
+#include "src/MegaBlocks/megablocks.h"
 #include "cartographer.h"
 
 class MarsRover : public QObject
 {
   Q_OBJECT
 public:
-
-
-  /**
-   * @enum DIR_MOVE
-   * @brief The DIR_MOVE enum defines possible moves from a node.
-   */
-  enum DIR_MOVE
-  {
-    UP = 0,
-    RIGHT,
-    DOWN,
-    LEFT
-  };
-  Q_ENUM(DIR_MOVE)
-
-
-  /**
-   * @struct PathFindNode
-   * @brief The PathFindNode struct defines Node for usage in path finding.
-   * @param index location of node in 1d array map.
-   * @param cameFrom parent node of this node in path finding.
-   * @param fVal distance from start node + distance from end node.
-   */
-  struct PathFindNode
-  {
-    int     index;
-    int     cameFrom;
-    int     fVal;
-    int     gVal;
-    bool    visited;
-    QString moveToHere;
-  };
 
   /**
    * @brief Default constructor.
@@ -91,7 +60,7 @@ public:
    * @param gameMap 1d representation of game map.
    * @return TBD
    */
-  QList <Cartographer::TILE_TYPE> pathFind(const int mapSize, const int startIndex, const int targetIndex, const QList <Cartographer::TILE_TYPE>& gameMap);
+  QList <MegaBlocks::TILE_TYPE> pathFind(const int mapSize, const int startIndex, const int targetIndex, const QList <MegaBlocks::TILE_TYPE>& gameMap);
 
 
   QString getNextMove()

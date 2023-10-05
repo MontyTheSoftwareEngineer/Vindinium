@@ -34,10 +34,10 @@ GameManager::GameManager(QObject *parent, const QString& keyFilePath, const QStr
   connect(m_cartMan, &Cartographer::mapUpdated, this, &GameManager::newMapFromCartographer);
 }
 
-void GameManager::startNewGame(GAME_MODE mode)
+void GameManager::startNewGame(MegaBlocks::GAME_MODE mode)
 {
   m_currentGameID.clear();
-  QString serverUrl = m_serverURL + (mode == TRAINING ? TRAINING_API : ARENA_API);
+  QString serverUrl = m_serverURL + (mode == MegaBlocks::TRAINING ? TRAINING_API : ARENA_API);
 
   if (m_apiKey.isEmpty())
   {
@@ -53,7 +53,7 @@ void GameManager::startNewGame(GAME_MODE mode)
 void GameManager::newPostManResponse(const QString&response)
 {
   JSONParser           jParser;
-  JSONParser::GameData parsedGameData = jParser.parseJSONString(response);
+  MegaBlocks::GameData parsedGameData = jParser.parseJSONString(response);
 
   m_currentPlayUrl = parsedGameData.m_playUrl;
 
@@ -61,22 +61,22 @@ void GameManager::newPostManResponse(const QString&response)
 
   emit gameMapUpdated(parsedGameData.m_mapSize, m_cartMan->getCurrentMap());
 
-  if (parsedGameData.m_currentTurnCount < parsedGameData.m_totalTurns)
-  {
-    qDebug() << parsedGameData.m_mapSize;
-    qDebug() << "Turn " << parsedGameData.m_currentTurnCount << " of " << parsedGameData.m_totalTurns;
-    QUrl      playURL = parsedGameData.m_playUrl;
-    QUrlQuery postData;
-    postData.addQueryItem("key", m_apiKey);
-    postData.addQueryItem("dir", "North");
+//  if (parsedGameData.m_currentTurnCount < parsedGameData.m_totalTurns)
+//  {
+//    qDebug() << parsedGameData.m_mapSize;
+//    qDebug() << "Turn " << parsedGameData.m_currentTurnCount << " of " << parsedGameData.m_totalTurns;
+//    QUrl      playURL = parsedGameData.m_playUrl;
+//    QUrlQuery postData;
+//    postData.addQueryItem("key", m_apiKey);
+//    postData.addQueryItem("dir", "North");
 
-    m_postMan->makeNetworkRequest(playURL, postData);
-  }
-  else
-  {
-    qDebug() << "Game Over!";
-    qDebug() << parsedGameData.m_viewUrl;
-  }
+//    m_postMan->makeNetworkRequest(playURL, postData);
+//  }
+//  else
+//  {
+//    qDebug() << "Game Over!";
+//    qDebug() << parsedGameData.m_viewUrl;
+//  }
 }
 
 void GameManager::setNewDestination(const int index)

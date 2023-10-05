@@ -13,13 +13,14 @@
 #include <QObject>
 #include <QList>
 
-#include "src/Cartographer/cartographer.h"
+#include "src/MegaBlocks/megablocks.h"
 
 class UIHelper : public QObject
 {
   Q_OBJECT
 
-  Q_PROPERTY(int mapSize READ mapSize WRITE setMapSize NOTIFY mapSizeChanged FINAL)
+  Q_PROPERTY(int mapSize READ mapSize WRITE setMapSize NOTIFY mapSizeChanged)
+  Q_PROPERTY(QString gameStats READ gameStats WRITE setGameStats NOTIFY gameStatsChanged)
 public:
 
   /**
@@ -54,6 +55,9 @@ public:
    */
   Q_INVOKABLE QString getCellText(const int cellIndex);
 
+  QString gameStats() const;
+  void setGameStats(const QString&newGameStats);
+
 public slots:
 
   /**
@@ -61,7 +65,7 @@ public slots:
    * @param mapSize The size of the new map.
    * @param newMap The new map.
    */
-  void newMapAvailable(const int mapSize, QList <Cartographer::TILE_TYPE> newMap);
+  void newMapAvailable(const int mapSize, QList <MegaBlocks::TILE_TYPE> newMap);
 
   /**
    * @brief Sets the target destination for pathfinding.
@@ -89,6 +93,8 @@ signals:
    */
   void newWayPoint(const int index);
 
+  void gameStatsChanged();
+
 private:
 
   /**
@@ -96,17 +102,18 @@ private:
    * @param tile The type of the tile.
    * @return A string representing the color of the tile.
    */
-  QString tileTypeToCellColor(const Cartographer::TILE_TYPE tile);
+  QString tileTypeToCellColor(const MegaBlocks::TILE_TYPE tile);
 
   /**
    * @brief Converts a tile type to display text.
    * @param tile The type of the tile.
    * @return A string representing the display text of the tile.
    */
-  QString tileTypeToDisplayText(const Cartographer::TILE_TYPE tile);
+  QString tileTypeToDisplayText(const MegaBlocks::TILE_TYPE tile);
 
   int m_mapSize;
-  QList <Cartographer::TILE_TYPE> m_currentCachedMap;
+  QList <MegaBlocks::TILE_TYPE> m_currentCachedMap;
+  QString m_gameStats;
 };
 
 #endif // UIHELPER_H

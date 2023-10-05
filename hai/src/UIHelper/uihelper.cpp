@@ -13,6 +13,7 @@
 UIHelper::UIHelper(QObject *parent)
   : QObject{parent}
   , m_mapSize(28)
+  , m_gameStats("Game Stats")
 {
 }
 
@@ -51,7 +52,7 @@ QString UIHelper::getCellText(const int cellIndex)
   return("");
 }
 
-void UIHelper::newMapAvailable(const int mapSize, QList <Cartographer::TILE_TYPE> newMap)
+void UIHelper::newMapAvailable(const int mapSize, QList <MegaBlocks::TILE_TYPE> newMap)
 {
   qDebug() << "UPDATE MAP@@@";
   m_currentCachedMap = newMap;
@@ -65,47 +66,47 @@ void UIHelper::setDest(const int index)
   emit newWayPoint(index);
 }
 
-QString UIHelper::tileTypeToCellColor(const Cartographer::TILE_TYPE tile)
+QString UIHelper::tileTypeToCellColor(const MegaBlocks::TILE_TYPE tile)
 {
   switch (tile)
   {
-  case Cartographer::PLAYER_ONE:
+  case MegaBlocks::PLAYER_ONE:
     return("red");
 
-  case Cartographer::PLAYER_TWO:
+  case MegaBlocks::PLAYER_TWO:
     return("yellow");
 
-  case Cartographer::PLAYER_THREE:
+  case MegaBlocks::PLAYER_THREE:
     return("green");
 
-  case Cartographer::PLAYER_FOUR:
+  case MegaBlocks::PLAYER_FOUR:
     return("#5693f5");
 
-  case Cartographer::MINE_ONE:
+  case MegaBlocks::MINE_ONE:
     return("#fcb495");
 
-  case Cartographer::MINE_TWO:
+  case MegaBlocks::MINE_TWO:
     return("#eaedad");
 
-  case Cartographer::MINE_THREE:
+  case MegaBlocks::MINE_THREE:
     return("#b5eb91");
 
-  case Cartographer::MINE_FOUR:
+  case MegaBlocks::MINE_FOUR:
     return("#91baeb");
 
-  case Cartographer::MINE_FREE:
+  case MegaBlocks::MINE_FREE:
     return("#695442");
 
-  case Cartographer::IMPASSABLE:
+  case MegaBlocks::IMPASSABLE:
     return("lightgrey");
 
-  case Cartographer::TAVERN:
+  case MegaBlocks::TAVERN:
     return("orange");
 
-  case Cartographer::FREE_SPACE:
+  case MegaBlocks::FREE_SPACE:
     return("white");
 
-  case Cartographer::PATH:
+  case MegaBlocks::PATH:
     return("#bce8ae");
 
   default: {
@@ -114,51 +115,66 @@ QString UIHelper::tileTypeToCellColor(const Cartographer::TILE_TYPE tile)
   }
 }
 
-QString UIHelper::tileTypeToDisplayText(const Cartographer::TILE_TYPE tile)
+QString UIHelper::tileTypeToDisplayText(const MegaBlocks::TILE_TYPE tile)
 {
   switch (tile)
   {
-  case Cartographer::PLAYER_ONE:
+  case MegaBlocks::PLAYER_ONE:
     return("@1");
 
-  case Cartographer::PLAYER_TWO:
+  case MegaBlocks::PLAYER_TWO:
     return("@2");
 
-  case Cartographer::PLAYER_THREE:
+  case MegaBlocks::PLAYER_THREE:
     return("@3");
 
-  case Cartographer::PLAYER_FOUR:
+  case MegaBlocks::PLAYER_FOUR:
     return("@4");
 
-  case Cartographer::MINE_ONE:
+  case MegaBlocks::MINE_ONE:
     return("$1");
 
-  case Cartographer::MINE_TWO:
+  case MegaBlocks::MINE_TWO:
     return("$2");
 
-  case Cartographer::MINE_THREE:
+  case MegaBlocks::MINE_THREE:
     return("$3");
 
-  case Cartographer::MINE_FOUR:
+  case MegaBlocks::MINE_FOUR:
     return("$4");
 
-  case Cartographer::MINE_FREE:
+  case MegaBlocks::MINE_FREE:
     return("$-");
 
-  case Cartographer::IMPASSABLE:
+  case MegaBlocks::IMPASSABLE:
     return("XX");
 
-  case Cartographer::TAVERN:
+  case MegaBlocks::TAVERN:
     return("[]");
 
-  case Cartographer::FREE_SPACE:
+  case MegaBlocks::FREE_SPACE:
     return("  ");
 
-  case Cartographer::PATH:
+  case MegaBlocks::PATH:
     return("  ");
 
   default: {
     qErrnoWarning("tileTypeToCellColor unknown tile type");
   }
   }
+}
+
+QString UIHelper::gameStats() const
+{
+  return(m_gameStats);
+}
+
+void UIHelper::setGameStats(const QString&newGameStats)
+{
+  if (m_gameStats == newGameStats)
+  {
+    return;
+  }
+  m_gameStats = newGameStats;
+  emit gameStatsChanged();
 }

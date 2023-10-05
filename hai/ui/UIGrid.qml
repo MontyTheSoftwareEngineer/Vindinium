@@ -16,8 +16,8 @@ Column {
                     id: cell
                     property int cellIndex: rowLayout.rowNum * mapSize + modelData
                     border.color: "black"
-                    width: window.width / mapSize
-                    height: window.height / mapSize
+                    width: colLayout.width / mapSize
+                    height: colLayout.height / mapSize
                     color: uiHelper.getCellColor(cellIndex)
                     MouseArea {
                         anchors.fill: parent

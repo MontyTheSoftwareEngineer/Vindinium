@@ -11,9 +11,11 @@ QTQUICK_COMPILER_SKIPPED_RESOURCES += qml.qrc
 SOURCES += \
         src/Cartographer/cartographer.cpp \
         src/Cartographer/marsrover.cpp \
+        src/Chess/magnuscarlson.cpp \
         src/GameManager/gamemanager.cpp \
         src/Network/postman.cpp \
         src/RosettaStone/jsonparser.cpp \
+        src/Statistician/statistician.cpp \
         src/UIHelper/uihelper.cpp \
         src/main.cpp
 
@@ -25,13 +27,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
   src/Cartographer/cartographer.h \
   src/Cartographer/marsrover.h \
+  src/Chess/magnuscarlson.h \
   src/GameManager/gamemanager.h \
+  src/MegaBlocks/megablocks.h \
   src/Network/postman.h \
   src/RosettaStone/jsonparser.h \
+  src/Statistician/statistician.h \
   src/UIHelper/uihelper.h
-
-DISTFILES += \
-  ui/main.qml
 
 RESOURCES += \
   qml.qrc

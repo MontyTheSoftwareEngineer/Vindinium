@@ -2,24 +2,16 @@
 #define JSONPARSER_H
 
 #include <QObject>
+#include "src/MegaBlocks/megablocks.h"
+#include "src/GameManager/gamemanager.h"
 
 class JSONParser : public QObject
 {
   Q_OBJECT
 public:
-  struct GameData
-  {
-    QString m_gameID;
-    QString m_playUrl;
-    QString m_viewUrl;
-    int     m_mapSize;
-    QString m_gameMap;
-    int     m_currentTurnCount;
-    int     m_totalTurns;
-  };
   explicit JSONParser(QObject *parent = nullptr);
 
-  GameData parseJSONString(const QString& jsonString);
+  MegaBlocks::GameData parseJSONString(const QString& jsonString);
 
 signals:
 };

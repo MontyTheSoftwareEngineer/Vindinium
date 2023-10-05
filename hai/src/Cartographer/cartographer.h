@@ -14,49 +14,12 @@
 #include <QObject>
 #include <QMap>
 
+#include "src/MegaBlocks/megablocks.h"
+
 class Cartographer : public QObject
 {
   Q_OBJECT
 public:
-
-  /**
-   * @struct Unit
-   * @brief The Unit struct defines a tile Unit which contains location and owner.
-   */
-  struct Unit
-  {
-    Unit(int index, QPair <int, int> cartCoord, int owner)
-    {
-      m_indexLocation     = index;
-      m_cartesianLocation = cartCoord;
-      m_owner             = owner;
-    }
-    int              m_indexLocation;
-    QPair <int, int> m_cartesianLocation;
-    int              m_owner;
-  };
-
-  /**
-   * @enum TILE_TYPE
-   * @brief The TILE_TYPE enum defines the different types of tiles available in the game map.
-   */
-  enum TILE_TYPE
-  {
-    PLAYER_ONE = 0,        // Represents the first player's tile.
-    PLAYER_TWO,            // Represents the second player's tile.
-    PLAYER_THREE,          // Represents the third player's tile.
-    PLAYER_FOUR,           // Represents the fourth player's tile.
-    MINE_FREE,             // Represents a mine that's free.
-    MINE_ONE,              // Represents a mine owned by the first player.
-    MINE_TWO,              // Represents a mine owned by the second player.
-    MINE_THREE,            // Represents a mine owned by the third player.
-    MINE_FOUR,             // Represents a mine owned by the fourth player.
-    TAVERN,                // Represents a tavern tile.
-    FREE_SPACE,            // Represents a free space tile.
-    IMPASSABLE,            // Represents an impassable tile.
-    PATH
-  };
-  Q_ENUM(TILE_TYPE)
 
   /**
    * @brief Default constructor.
@@ -78,25 +41,11 @@ public:
   void parseMap(const int& size, const QString& map);
 
   /**
-   * @brief Print map to console.
-   * @param size The size of the one-dimensional map.
-   * @param inputMap The map to be printed Tile_type representation.
-   */
-  void printMap(const int& size, const QList <TILE_TYPE> inputMap);
-
-  /**
-   * @brief Convert a TILE_TYPE to its corresponding string representation.
-   * @param tile The TILE_TYPE to be converted.
-   * @return The string representation of the provided TILE_TYPE.
-   */
-  static QString tileTypeToString(TILE_TYPE tile);
-
-  /**
    * @brief Convert a string representation to its corresponding TILE_TYPE.
    * @param tileString The string to be converted.
    * @return The TILE_TYPE representation of the provided string.
    */
-  TILE_TYPE stringToTileType(const QString tileString);
+  MegaBlocks::TILE_TYPE stringToTileType(const QString tileString);
 
   /**
    * @brief Helper function to add mine or player to mine list.
@@ -104,13 +53,13 @@ public:
    * @param index 1d index of unit location.
    * @param tileType TILE_TYPE of tile.
    */
-  void addMineOrPlayerToList(const int mapSize, const int index, TILE_TYPE tileType);
+  void addMineOrPlayerToList(const int mapSize, const int index, MegaBlocks::TILE_TYPE tileType);
 
   /**
    * @brief Return current game map.
    * @return QList of game map in 1D array.
    */
-  QList <TILE_TYPE> getCurrentMap()
+  QList <MegaBlocks::TILE_TYPE> getCurrentMap()
   {
     return(m_mapCache);
   }
@@ -129,12 +78,12 @@ signals:
   void mapUpdated();
 
 private:
-  QMap <QString, TILE_TYPE> m_tileLegend; //Map for easier conversion from string -> tile_type.
-  QList <TILE_TYPE> m_origMap;;
-  QList <TILE_TYPE> m_mapCache;
-  QList <Unit> m_mineList;
-  QList <Unit> m_tavernList;
-  QList <Unit> m_playerList;
+  QMap <QString, MegaBlocks::TILE_TYPE> m_tileLegend; //Map for easier conversion from string -> tile_type.
+  QList <MegaBlocks::TILE_TYPE> m_origMap;;
+  QList <MegaBlocks::TILE_TYPE> m_mapCache;
+  QList <MegaBlocks::Unit> m_mineList;
+  QList <MegaBlocks::Unit> m_tavernList;
+  QList <MegaBlocks::Unit> m_playerList;
 
   int m_mapSize;
   int m_myLocation;

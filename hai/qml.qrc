@@ -1,8 +1,7 @@
 <RCC>
-    <qresource prefix="/ui">
-        <file>ui/main.qml</file>
-    </qresource>
+    <qresource prefix="/ui"/>
     <qresource prefix="/">
         <file>ui/UIGrid.qml</file>
+        <file>ui/main.qml</file>
     </qresource>
 </RCC>
