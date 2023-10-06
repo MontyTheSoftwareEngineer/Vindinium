@@ -19,6 +19,7 @@
 #include "src/BotModels/hunhun.h"
 #include "src/BotModels/randobotmodel.h"
 #include "src/BotModels/marvbot.h"
+#include "src/BotModels/saverscally.h"
 
 static const QString TRAINING_API = "/api/training";
 static const QString ARENA_API    = "/api/arena";
@@ -29,6 +30,7 @@ GameManager::GameManager(QObject *parent, const QString& keyFilePath, const QStr
   , m_currentGameID(QString())
   , m_currentPlayUrl(QString())
   , m_state(QString())
+  , isShapeShifting(false)
 {
   readAPIKey(keyFilePath);
 
@@ -44,6 +46,11 @@ GameManager::GameManager(QObject *parent, const QString& keyFilePath, const QStr
   {
     qDebug() << "Using bot model ScallyWag";
     m_botModel = new ScallyWag(this);
+  }
+  else if (botModel == "SaverScally")
+  {
+    qDebug() << "Using bot model SaverScally";
+    m_botModel = new SaverScally(this);
   }
   else if (botModel == "MarvBot")
   {
@@ -65,20 +72,77 @@ GameManager::GameManager(QObject *parent, const QString& keyFilePath, const QStr
     qDebug() << "Using bot model Random";
     m_botModel = new RandoBotModel(this);
   }
+
+  else if (botModel == "ShapeShift")
+  {
+    isShapeShifting = true;
+    QStringList BotTypes = { "ScallyWag", "AggroWag", "MarvBot", "SaverScally" };
+    qsrand(QTime::currentTime().msec());
+
+    QString randomBot = BotTypes.at(qrand() % BotTypes.size());
+    if (randomBot == "ScallyWag")
+    {
+      qDebug() << "Using bot model ScallyWag";
+      m_botModel = new ScallyWag(this);
+    }
+    else if (randomBot == "MarvBot")
+    {
+      qDebug() << "Using bot model MarvBot";
+      m_botModel = new MarvBot(this);
+    }
+    else if (randomBot == "AggroWag")
+    {
+      qDebug() << "Using bot model AggroWag";
+      m_botModel = new AggroScallyWag(this);
+    }
+    else if (botModel == "SaverScally")
+    {
+      qDebug() << "Using bot model SaverScally";
+      m_botModel = new SaverScally(this);
+    }
+  }
   else
   {
-    qErrnoWarning("Invalid bot model!");
+    qErrnoWarning("Invalid bot model !");
   }
 }
 
 void GameManager::startNewGame(MegaBlocks::GAME_MODE mode)
 {
+  if (isShapeShifting)
+  {
+    QStringList BotTypes = { "ScallyWag", "AggroWag", "MarvBot", "SaverScally" };
+    qsrand(QTime::currentTime().msec());
+    m_botModel->deleteLater();
+    m_botModel = nullptr;
+    QString randomBot = BotTypes.at(qrand() % BotTypes.size());
+    if (randomBot == "ScallyWag")
+    {
+      qDebug() << "Using bot model ScallyWag";
+      m_botModel = new ScallyWag(this);
+    }
+    else if (randomBot == "MarvBot")
+    {
+      qDebug() << "Using bot model MarvBot";
+      m_botModel = new MarvBot(this);
+    }
+    else if (randomBot == "SaverScally")
+    {
+      qDebug() << "Using bot model SaverScally";
+      m_botModel = new SaverScally(this);
+    }
+    else if (randomBot == "AggroWag")
+    {
+      qDebug() << "Using bot model AggroWag";
+      m_botModel = new AggroScallyWag(this);
+    }
+  }
   m_currentGameID.clear();
   QString serverUrl = m_serverURL + (mode == MegaBlocks::TRAINING ? TRAINING_API : ARENA_API);
 
   if (m_apiKey.isEmpty())
   {
-    qErrnoWarning(2, "Could not read API Key!");
+    qErrnoWarning(2, "Could not read API Key !");
   }
 
   QUrlQuery postData;
@@ -120,7 +184,7 @@ void GameManager::newPostManResponse(const QString&response)
   }
   else
   {
-    qDebug() << "Game Over!";
+    qDebug() << "Game Over !";
     qDebug() << m_cachedGameData.m_viewUrl;
     startNewGame(MegaBlocks::ARENA);
   }

@@ -77,6 +77,7 @@ private:
   QString m_currentPlayUrl;
 
   QString m_state;
+  bool isShapeShifting;
 
   MegaBlocks::GameData m_cachedGameData;
 

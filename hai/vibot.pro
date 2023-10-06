@@ -14,6 +14,7 @@ SOURCES += \
         src/BotModels/ibotmodel.cpp \
         src/BotModels/marvbot.cpp \
         src/BotModels/randobotmodel.cpp \
+        src/BotModels/saverscally.cpp \
         src/BotModels/scallywag.cpp \
         src/Cartographer/cartographer.cpp \
         src/Cartographer/marsrover.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
   src/BotModels/ibotmodel.h \
   src/BotModels/marvbot.h \
   src/BotModels/randobotmodel.h \
+  src/BotModels/saverscally.h \
   src/BotModels/scallywag.h \
   src/Cartographer/cartographer.h \
   src/Cartographer/marsrover.h \

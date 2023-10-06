@@ -18,7 +18,7 @@ QString HunHun::getNextMove(MegaBlocks::GameData&gameData)
     m_isHealing = false;
   }
 
-  if (gameData.m_playerHealth > 60 && !m_isHealing)
+  if (gameData.m_playerHealth > 40 && !m_isHealing)
   {
     int ownMineCount = gameData.m_playerMap[gameData.m_ownPlayerID].mineCount;
 
@@ -36,9 +36,12 @@ QString HunHun::getNextMove(MegaBlocks::GameData&gameData)
     {
       return(goToClosetMine(gameData));
     }
+    else if (gameData.m_playerMap[playerWithMostMines].health > gameData.m_playerHealth)
+    {
+      return(goToClosestTavern(gameData));
+    }
     else
     {
-      //qDebug() << "Looking for player!";
       nextMove = cartographer.setDestinationAndGetMove(gameData, gameData.m_playerMap[playerWithMostMines].indexLocation);
     }
   }

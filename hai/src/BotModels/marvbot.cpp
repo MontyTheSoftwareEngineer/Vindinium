@@ -19,12 +19,23 @@ QString MarvBot::getNextMove(MegaBlocks::GameData& gameData)
   }
   if (gameData.m_playerHealth > 40 && !m_isHealing)
   {
-    int playerWithMostMines = 0;
-    int mostMines           = 0;
+    int closestPlayer         = -1;
+    int closestPlayerDistance = INT_MAX;
+    int playerWithMostMines   = 0;
+    int mostMines             = 0;
     for (int i = 1; i < 5; i++)
     {
       if (i != gameData.m_ownPlayerID && gameData.m_playerMap[i].mineCount > mostMines)
       {
+        int distanceToPlayer =
+          MarsRover::roughDistance(gameData.m_mapSize,
+                                   gameData.m_playerLocationIndex,
+                                   gameData.m_playerMap[i].indexLocation);
+        if (distanceToPlayer < closestPlayerDistance)
+        {
+          closestPlayer         = i;
+          closestPlayerDistance = distanceToPlayer;
+        }
         mostMines           = gameData.m_playerMap[i].mineCount;
         playerWithMostMines = i;
       }
@@ -43,6 +54,17 @@ QString MarvBot::getNextMove(MegaBlocks::GameData& gameData)
       {
         closestMineDistance = roughDistance;
         closestMineIndex    = i;
+      }
+    }
+    if (closestPlayerDistance < 3)
+    {
+      if (gameData.m_playerMap[closestPlayer].health > gameData.m_playerHealth)
+      {
+        return(goToClosestTavern(gameData));
+      }
+      else
+      {
+        return(cartographer.setDestinationAndGetMove(gameData, gameData.m_playerMap[closestPlayer].indexLocation));
       }
     }
 
