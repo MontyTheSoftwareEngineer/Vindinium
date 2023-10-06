@@ -55,7 +55,7 @@ QList <MegaBlocks::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int s
 
   while (!foundTarget && !openQueue.isEmpty())
   {
-    qDebug() << "OpenQueue size: " << openQueue.size();
+    //qDebug() << "OpenQueue size: " << openQueue.size();
 
     int lowestFValIndex = -1;
     int lowestFVal      = INT_MAX;
@@ -72,14 +72,14 @@ QList <MegaBlocks::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int s
     currentNode = openQueue[lowestFValIndex];
     openQueue.remove(lowestFValIndex);
     closedQueue[lowestFValIndex] = currentNode;
-    qDebug() << "Current node: " << currentNode.index << ", fVal: " << currentNode.fVal;
+    //qDebug() << "Current node: " << currentNode.index << ", fVal: " << currentNode.fVal;
     QList <MegaBlocks::PathFindNode> nodesToAdd;
 
     for (int i = 0; i < 4; i++)
     {
       int     modifier = 0;
       QString move;
-      qDebug() << "Checking dir: " << i;
+      //qDebug() << "Checking dir: " << i;
       switch (i)
       {
       case 0:      // up
@@ -104,11 +104,11 @@ QList <MegaBlocks::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int s
       }
 
       int nextIndex = currentNode.index + modifier;
-      qDebug() << "Neighbor index: " << nextIndex;
+      //qDebug() << "Neighbor index: " << nextIndex;
       QPair <int, int> nextIndexCartesian = indexToCartesian(mapSize, nextIndex);
       if (nextIndex == targetIndex)
       {
-        qDebug() << "Found Target!";
+        //qDebug() << "Found Target!";
         foundTarget = true;
         MegaBlocks::PathFindNode finalNode;
         finalNode.index          = nextIndex;
@@ -122,7 +122,7 @@ QList <MegaBlocks::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int s
                gameMap.at(nextIndex) == MegaBlocks::FREE_SPACE &&                         //space is free space
                !closedQueue.contains(nextIndex))                                          //not in closed queue
       {
-        qDebug() << "Valid node!";
+        //qDebug() << "Valid node!";
         int nextNodeFVal = currentNode.gVal + 1 + roughDistance(mapSize, nextIndex, targetIndex);
 
         MegaBlocks::PathFindNode newNode;
@@ -136,31 +136,31 @@ QList <MegaBlocks::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int s
       }
       else
       {
-        qDebug() << "Invalid node...";
+        //qDebug() << "Invalid node...";
       }
     }
 
-    qDebug() << "**Adding nodes**";
+    //qDebug() << "**Adding nodes**";
     for (int i = 0; i < nodesToAdd.size(); i++)
     {
-      qDebug() << "New Node: " << nodesToAdd[i].index << " , FVal: " << nodesToAdd[i].index;
+      //qDebug() << "New Node: " << nodesToAdd[i].index << " , FVal: " << nodesToAdd[i].index;
       if (!openQueue.contains(nodesToAdd[i].index) || (openQueue[nodesToAdd[i].index].fVal > nodesToAdd[i].index))
       {
         openQueue[nodesToAdd[i].index] = nodesToAdd[i];
-        qDebug() << "Added: " << nodesToAdd[i].index;
+        //qDebug() << "Added: " << nodesToAdd[i].index;
       }
       else
       {
-        qDebug() << "Decided not to add node!";
-        qDebug() << "open queue contains: " << openQueue.contains(nodesToAdd[i].index);
+        //qDebug() << "Decided not to add node!";
+        //qDebug() << "open queue contains: " << openQueue.contains(nodesToAdd[i].index);
         if (openQueue.contains(nodesToAdd[i].index))
         {
-          qDebug() << "New FVal: " << nodesToAdd[i].fVal << " | Old FVal: " << openQueue[nodesToAdd[i].index].fVal;
+          //qDebug() << "New FVal: " << nodesToAdd[i].fVal << " | Old FVal: " << openQueue[nodesToAdd[i].index].fVal;
         }
       }
     }
 
-    qDebug() << "Moving node to finished: " << currentNode.index;
+    //qDebug() << "Moving node to finished: " << currentNode.index;
     openQueue.remove(currentNode.index);
     closedQueue[currentNode.index] = currentNode;
 
@@ -168,7 +168,7 @@ QList <MegaBlocks::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int s
 
     if (currentNode.index == targetIndex)
     {
-      qDebug() << "TARGET FOUND!";
+      //qDebug() << "TARGET FOUND!";
       foundTarget = true;
       break;
     }
@@ -178,7 +178,7 @@ QList <MegaBlocks::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int s
 
   if (foundTarget)
   {
-    qDebug() << "FOUND!";
+    //qDebug() << "FOUND!";
     QList <int> path;
     int         currentPathIndex = targetIndex;
     while (currentPathIndex != startIndex)
@@ -199,7 +199,7 @@ QList <MegaBlocks::TILE_TYPE> MarsRover::pathFind(const int mapSize, const int s
   }
   else
   {
-    qDebug() << "No path to targ";
+    m_nextMove = "STAY";
   }
 
   return(newMap);

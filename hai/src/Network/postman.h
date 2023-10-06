@@ -53,6 +53,8 @@ signals:
    */
   void newResponseFromServer(const QString& response);
 
+  void errorFromServer();
+
 private:
   QNetworkAccessManager *m_networkManager;
 };

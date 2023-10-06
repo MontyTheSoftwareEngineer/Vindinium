@@ -34,7 +34,7 @@ int Cartographer::mapCacheSize()
   return(m_mapSize);
 }
 
-void Cartographer::addMineOrPlayerToList(const int mapSize, const int index, MegaBlocks::TILE_TYPE tileType)
+void Cartographer::addMineOrPlayerToList(MegaBlocks::GameData& gameData, const int mapSize, const int index, MegaBlocks::TILE_TYPE tileType)
 {
   int  owner  = 0;
   bool isMine = false;
@@ -67,12 +67,11 @@ void Cartographer::addMineOrPlayerToList(const int mapSize, const int index, Meg
     break;
 
   case MegaBlocks::PLAYER_ONE:
-    m_myLocation = index;
-    owner        = 1;
+    owner = 1;
     break;
 
   case MegaBlocks::PLAYER_TWO:
-    owner = 3;
+    owner = 2;
     break;
 
   case MegaBlocks::PLAYER_THREE:
@@ -95,25 +94,30 @@ void Cartographer::addMineOrPlayerToList(const int mapSize, const int index, Meg
   }
   else //player unit
   {
+    gameData.m_playerMap[owner].indexLocation = index;
     m_playerList.append(newUnit);
   }
 }
 
-QString Cartographer::setDestinationAndGetMove(const int index)
+QString Cartographer::setDestinationAndGetMove(MegaBlocks::GameData& gameData, const int targetIndex)
 {
-  m_mapCache       = m_origMap;
-  m_targetLocation = index;
+  //gameData.m_cachedMap = m_origMap;
+  m_targetLocation = targetIndex;
+  m_myLocation     = gameData.m_playerLocationIndex;
   MarsRover pathFinder;
-  QList <MegaBlocks::TILE_TYPE> newMap = pathFinder.pathFind(m_mapSize, m_myLocation, m_targetLocation, m_mapCache);
-  m_mapCache = newMap;
+  QList <MegaBlocks::TILE_TYPE> newMap = pathFinder.pathFind(gameData.m_mapSize, m_myLocation, m_targetLocation, gameData.m_cachedMap);
+//  /gameData.m_cachedMap = newMap;
 
   emit mapUpdated();
 
   return(pathFinder.getNextMove());
 }
 
-void Cartographer::parseMap(const int&size, const QString&inputMap)
+void Cartographer::parseMap(MegaBlocks::GameData& gameData)
 {
+  QString   inputMap = gameData.m_gameMap;
+  const int size     = gameData.m_mapSize;
+
   m_mapCache.clear();
 
   m_mineList.clear();
@@ -121,6 +125,32 @@ void Cartographer::parseMap(const int&size, const QString&inputMap)
   m_playerList.clear();
   m_myLocation = 0;
   m_mapSize    = size;
+
+  gameData.m_unownedMineList.clear();
+  MegaBlocks::TILE_TYPE playerTileType;
+  MegaBlocks::TILE_TYPE playerOwnedMineTileType;
+  switch (gameData.m_ownPlayerID)
+  {
+  case 1:
+    playerTileType          = MegaBlocks::PLAYER_ONE;
+    playerOwnedMineTileType = MegaBlocks::MINE_ONE;
+    break;
+
+  case 2:
+    playerTileType          = MegaBlocks::PLAYER_TWO;
+    playerOwnedMineTileType = MegaBlocks::MINE_TWO;
+    break;
+
+  case 3:
+    playerTileType          = MegaBlocks::PLAYER_THREE;
+    playerOwnedMineTileType = MegaBlocks::MINE_THREE;
+    break;
+
+  case 4:
+    playerTileType          = MegaBlocks::PLAYER_FOUR;
+    playerOwnedMineTileType = MegaBlocks::MINE_FOUR;
+    break;
+  }
 
   for (int countIndex = 0; countIndex < inputMap.size(); countIndex += 2)
   {
@@ -131,26 +161,35 @@ void Cartographer::parseMap(const int&size, const QString&inputMap)
         tileType == MegaBlocks::MINE_THREE || tileType == MegaBlocks::MINE_FOUR ||
         tileType == MegaBlocks::MINE_FREE)
     {
-      addMineOrPlayerToList(size, countIndex / 2, tileType);
+      if (tileType != playerOwnedMineTileType)
+      {
+        MegaBlocks::Unit newMine(countIndex / 2, MarsRover::indexToCartesian(size, countIndex / 2), -1);
+        gameData.m_unownedMineList.append(newMine);
+      }
+      addMineOrPlayerToList(gameData, size, countIndex / 2, tileType);
     }
     else if (tileType == MegaBlocks::TAVERN)
     {
       MegaBlocks::Unit newTavern(countIndex / 2, MarsRover::indexToCartesian(size, countIndex / 2), 0);
+      gameData.m_tavernList.append(newTavern);
       m_tavernList.append(newTavern);
     }
     else if (tileType == MegaBlocks::PLAYER_ONE || tileType == MegaBlocks::PLAYER_TWO ||
              tileType == MegaBlocks::PLAYER_THREE || tileType == MegaBlocks::PLAYER_FOUR)
     {
-      if (tileType == MegaBlocks::PLAYER_ONE)
+      if (tileType == playerTileType)
       {
+        gameData.m_playerLocationIndex = countIndex / 2;
         m_myLocation = countIndex / 2;
       }
-      addMineOrPlayerToList(size, countIndex / 2, tileType);
+
+      addMineOrPlayerToList(gameData, size, countIndex / 2, tileType);
     }
 
     m_mapCache.append(tileType);
   }
-  m_origMap = m_mapCache;
+  m_origMap            = m_mapCache;
+  gameData.m_cachedMap = m_mapCache;
 
   //printMap(size, m_mapCache);
 }

@@ -13,9 +13,9 @@
 
 #include <QObject>
 #include "src/MegaBlocks/megablocks.h"
-
 #include "src/Network/postman.h"
 #include "src/Cartographer/cartographer.h"
+#include "src/BotModels/ibotmodel.h"
 
 
 class GameManager : public QObject
@@ -29,7 +29,7 @@ public:
    * @param keyFilePath QString containing location for apiKey.
    * @param serverURL QString containing URL for game server.
    */
-  explicit GameManager(QObject *parent, const QString&keyFilePath, const QString& serverURL);
+  explicit GameManager(QObject *parent, const QString&keyFilePath, const QString& serverURL, const QString& botModel);
 
 public slots:
 
@@ -48,13 +48,9 @@ public slots:
 
   void setNewDestination(const int index);
 
-  /**
-   * @brief Method to test map string in offline mode.
-   * @param inputMap canned map data.
-   */
-  void testMap(const QString& inputMap);
-
   void newMapFromCartographer();
+
+  void errorFromPostMan();
 
 signals:
 
@@ -79,6 +75,12 @@ private:
   QString m_serverURL;
   QString m_currentGameID;
   QString m_currentPlayUrl;
+
+  QString m_state;
+
+  MegaBlocks::GameData m_cachedGameData;
+
+  IBotModel *m_botModel;
 };
 
 #endif // GAMEMANAGER_H

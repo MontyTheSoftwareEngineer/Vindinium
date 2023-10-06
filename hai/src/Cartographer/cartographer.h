@@ -36,9 +36,9 @@ public:
   /**
    * @brief Used to parse the 1D 2Char map into a 1D 1Char/Enum Map.
    * @param size The size of the map.
-   * @param map The map representation in QString format (2Char per tile).
+   * @param gameData parsed gameData.
    */
-  void parseMap(const int& size, const QString& map);
+  void parseMap(MegaBlocks::GameData& gameData);
 
   /**
    * @brief Convert a string representation to its corresponding TILE_TYPE.
@@ -53,7 +53,7 @@ public:
    * @param index 1d index of unit location.
    * @param tileType TILE_TYPE of tile.
    */
-  void addMineOrPlayerToList(const int mapSize, const int index, MegaBlocks::TILE_TYPE tileType);
+  void addMineOrPlayerToList(MegaBlocks::GameData &gameData, const int mapSize, const int index, MegaBlocks::TILE_TYPE tileType);
 
   /**
    * @brief Return current game map.
@@ -66,9 +66,10 @@ public:
 
   /**
    * @brief Sets a destination for pathfinder.
-   * @param index 1D location of target destination.
+   * @param gameData reference to cached game data object.
+   * @param targetIndex 1D location of target destination.
    */
-  QString setDestinationAndGetMove(const int index);
+  QString setDestinationAndGetMove(MegaBlocks::GameData& gameData, const int targetIndex);
 
 signals:
 

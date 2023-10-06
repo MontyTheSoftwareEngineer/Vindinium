@@ -55,19 +55,25 @@ public:
     int     health;
     int     gold;
     int     mineCount;
+    int     indexLocation;
   };
 
   struct GameData
   {
-    QString            m_gameID;
-    QString            m_playUrl;
-    QString            m_viewUrl;
-    int                m_ownPlayerID;
-    int                m_mapSize;
-    QString            m_gameMap;
-    int                m_currentTurnCount;
-    int                m_totalTurns;
-    QMap <int, Player> m_playerMap;
+    QString                       m_gameID;
+    QString                       m_playUrl;
+    QString                       m_viewUrl;
+    int                           m_ownPlayerID;
+    int                           m_playerLocationIndex;
+    int                           m_mapSize;
+    int                           m_playerHealth;
+    QString                       m_gameMap;
+    QList <Unit>                  m_unownedMineList;
+    QList <Unit>                  m_tavernList;
+    int                           m_currentTurnCount;
+    int                           m_totalTurns;
+    QMap <int, Player>            m_playerMap;
+    QList <MegaBlocks::TILE_TYPE> m_cachedMap;
   };
 
 

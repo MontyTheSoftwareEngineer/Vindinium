@@ -50,7 +50,7 @@ public:
    * @param pos2 second position position.
    * @return integer rough distance between pos1 and pos 2.
    */
-  int roughDistance(const int mapSize, const int pos1, const int pos2);
+  static int roughDistance(const int mapSize, const int pos1, const int pos2);
 
   /**
    * @brief Provides a rough distance from one point to another.

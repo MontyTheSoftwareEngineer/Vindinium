@@ -54,7 +54,6 @@ QString UIHelper::getCellText(const int cellIndex)
 
 void UIHelper::newMapAvailable(const int mapSize, QList <MegaBlocks::TILE_TYPE> newMap)
 {
-  qDebug() << "UPDATE MAP@@@";
   m_currentCachedMap = newMap;
   setMapSize(mapSize);
 

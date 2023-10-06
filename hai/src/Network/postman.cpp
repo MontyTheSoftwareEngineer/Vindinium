@@ -21,7 +21,7 @@ PostMan::PostMan(QObject *parent)
 
 void PostMan::networkManagerGotResponse(QNetworkReply *reply)
 {
-  qDebug() << "Network response";
+  //qDebug() << "Network response";
   if (reply->error() == QNetworkReply::NoError)
   {
     QString response = reply->readAll();
@@ -30,6 +30,7 @@ void PostMan::networkManagerGotResponse(QNetworkReply *reply)
   else
   {
     qDebug() << "Error:" << reply->errorString();
+    emit errorFromServer();
   }
 }
 

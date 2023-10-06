@@ -13,7 +13,7 @@ JSONParser::JSONParser(QObject *parent)
 
 MegaBlocks::GameData JSONParser::parseJSONString(const QString&jsonString)
 {
-  qDebug() << jsonString;
+  //qDebug() << jsonString;
   MegaBlocks::GameData parsedData;
 
   QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8());
@@ -25,14 +25,15 @@ MegaBlocks::GameData JSONParser::parseJSONString(const QString&jsonString)
   parsedData.m_currentTurnCount = jsonObj.value("game").toObject().value("turn").toInt();
   parsedData.m_totalTurns       = jsonObj.value("game").toObject().value("maxTurns").toInt();
 
-  parsedData.m_viewUrl     = jsonObj.value("viewUrl").toString();
-  parsedData.m_mapSize     = jsonObj.value("game").toObject().value("board").toObject().value("size").toInt();
-  parsedData.m_gameMap     = jsonObj.value("game").toObject().value("board").toObject().value("tiles").toString();
-  parsedData.m_ownPlayerID = jsonObj.value("hero").toObject().value("id").toInt();
+  parsedData.m_viewUrl      = jsonObj.value("viewUrl").toString();
+  parsedData.m_mapSize      = jsonObj.value("game").toObject().value("board").toObject().value("size").toInt();
+  parsedData.m_gameMap      = jsonObj.value("game").toObject().value("board").toObject().value("tiles").toString();
+  parsedData.m_ownPlayerID  = jsonObj.value("hero").toObject().value("id").toInt();
+  parsedData.m_playerHealth = jsonObj.value("hero").toObject().value("life").toInt();
 
   QMap <int, MegaBlocks::Player> playerMap;
 
-  QJsonArray heroArray = jsonObj.value("heroes").toArray();
+  QJsonArray heroArray = jsonObj.value("game").toObject().value("heroes").toArray();
   for (int i = 0; i < heroArray.size(); i++)
   {
     MegaBlocks::Player newPlayer;
@@ -40,13 +41,13 @@ MegaBlocks::GameData JSONParser::parseJSONString(const QString&jsonString)
     newPlayer.name      = heroArray.at(i).toObject().value("name").toString();
     newPlayer.health    = heroArray.at(i).toObject().value("health").toInt();
     newPlayer.gold      = heroArray.at(i).toObject().value("gold").toInt();
-    newPlayer.mineCount = heroArray.at(i).toObject().value("gold").toInt();
+    newPlayer.mineCount = heroArray.at(i).toObject().value("mineCount").toInt();
 
     playerMap[newPlayer.id] = newPlayer;
   }
   parsedData.m_playerMap = playerMap;
 
-  qDebug() << "Game URL: " << parsedData.m_viewUrl;
+  //qDebug() << "Game URL: " << parsedData.m_viewUrl;
 
   return(parsedData);
 }

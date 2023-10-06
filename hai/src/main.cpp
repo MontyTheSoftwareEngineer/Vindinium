@@ -40,6 +40,18 @@ int main(int argc, char *argv[])
     qErrnoWarning(-1, "Missing keyFilePath argument (--keyFilePath \"path/to/file.txt\")");
   }
 
+  QString botModel;
+  int     botModelOption = args.indexOf("--botModel");
+
+  if (botModelOption != -1 && botModelOption + 1 < args.size())
+  {
+    botModel = args.at(botModelOption + 1);
+  }
+  else
+  {
+    qErrnoWarning(-1, "Missing keyFilePath argument (--keyFilePath \"path/to/file.txt\")");
+  }
+
   QString serverUrl;
   int     serverUrlOptionIndex = args.indexOf("--serverUrl");
 
@@ -59,24 +71,24 @@ int main(int argc, char *argv[])
   qmlRegisterType <UIHelper>("Vindinium", 1, 0, "UIHelper");
   QQmlApplicationEngine engine;
 
-  GameManager gameMan(nullptr, keyFilePath, serverUrl);
+  GameManager gameMan(nullptr, keyFilePath, serverUrl, botModel);
   UIHelper    uiHelper;
 
   QObject::connect(&gameMan, &GameManager::gameMapUpdated, &uiHelper, &UIHelper::newMapAvailable);
   QObject::connect(&uiHelper, &UIHelper::newWayPoint, &gameMan, &GameManager::setNewDestination);
 
   //gameMan.testMap("####################$-    ####    $-########################################    $-####$-    ##########################################            ####################################$-####    ########    ####$-############################  ##  ##  ########  ##  ##  ########################$-##          ########          ##$-####################    ##    ####  ####  ####    ##    ##################          ##  @1  $-$-  @4  ##          ####################  []  $-##  ########  ##$-  []  ########################    ##      ########      ##    ########################  ##      ############      ##  ######################              ########              ####################  ######  ##$-########$-##  ######  ####################  ##        ############        ##  ####################  ##        ############        ##  ####################  ######  ##$-########$-##  ######  ####################              ########              ######################  ##      ############      ##  ########################    ##      ########      ##    ########################  []  $-##  ########  ##$-  []  ####################          ##  @2  $-$-  @3  ##          ##################    ##    ####  ####  ####    ##    ####################$-##          ########          ##$-########################  ##  ##  ########  ##  ##  ############################$-####    ########    ####$-####################################            ##########################################    $-####$-    ########################################$-    ####    $-####################");
-  gameMan.startNewGame(MegaBlocks::TRAINING);
+  gameMan.startNewGame(MegaBlocks::ARENA);
 
-  QObject::connect(&uiHelper, &UIHelper::mapUpdate, [&]() {
-    if (!isQmlLoaded)
-    {
-      qDebug() << "Loading QML for the first time";
-      engine.rootContext()->setContextProperty("uiHelper", &uiHelper);
-      engine.load(QUrl(QStringLiteral("qrc:/ui/ui/main.qml")));
-      isQmlLoaded = true;     // Set the flag
-    }
-  });
+//  QObject::connect(&uiHelper, &UIHelper::mapUpdate, [&]() {
+//    if (!isQmlLoaded)
+//    {
+//      qDebug() << "Loading QML for the first time";
+//      engine.rootContext()->setContextProperty("uiHelper", &uiHelper);
+//      engine.load(QUrl(QStringLiteral("qrc:/ui/main.qml")));
+//      isQmlLoaded = true;     // Set the flag
+//    }
+//  });
 
   engine.rootContext()->setContextProperty("uiHelper", &uiHelper);
 
